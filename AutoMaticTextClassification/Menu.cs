@@ -13,6 +13,7 @@ namespace AutomaticTextClassification
         {
             string menuOption;
             bool menu = false;
+            BayesingNetwork bn;
             do
             {
                 Console.Clear();
@@ -24,8 +25,11 @@ namespace AutomaticTextClassification
                 switch (menuOption)
                 {
                     case "1":
+                        bn = new BayesingNetwork();
+                        bn.Train();
                         break;
                     case "2":
+
                         break;
                     case "q":
                         break;
@@ -35,6 +39,11 @@ namespace AutomaticTextClassification
                         break;
                 }
             } while (menu);
+
+        }
+
+        public void Result(string goverment, double percentageCertainty)
+        {
 
         }
     }

@@ -43,7 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BayesingNetwork.cs" />
-    <Compile Include="FileReader.cs" />
+    <Compile Include="FileReadWrite.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="Objects\CategoryObj.cs" />
     <Compile Include="Objects\FileObj.cs" />
