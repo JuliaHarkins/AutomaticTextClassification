@@ -11,19 +11,12 @@ namespace AutomaticTextClassification
         string[] _lemmatizingWords;
         string _name;
         Dictionary<string, int> _wordAndCount;
-        
-        CategoryObj()
-        {
+        public string Name { get { return _name; } set { _name = value; } }
+        public Dictionary<string, int> WordAndCount { get {return _wordAndCount; } set { _wordAndCount = value; } }
 
-        }
-        CategoryObj(string[] lemmatizingWords)
+        public CategoryObj(string[] lemmatizingWords)
         {
             _lemmatizingWords = lemmatizingWords;
-        }
-
-        public Dictionary<string, int> WordAndCount()
-        {
-            return _wordAndCount;
         }
 
         string[] RemoveLemmatizingWords(string text)
