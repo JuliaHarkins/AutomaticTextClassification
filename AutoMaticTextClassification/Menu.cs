@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoMaticTextClassification
+namespace AutomaticTextClassification
 {
     class Menu
     {
@@ -15,6 +15,7 @@ namespace AutoMaticTextClassification
             bool menu = false;
             do
             {
+                Console.Clear();
                 Console.WriteLine("Select an Option");
                 Console.WriteLine("1. Train");
                 Console.WriteLine("2. Classify text ");

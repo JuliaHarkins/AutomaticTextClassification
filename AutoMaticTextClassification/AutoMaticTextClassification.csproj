@@ -42,9 +42,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BayesingNetwork.cs" />
     <Compile Include="FileReader.cs" />
     <Compile Include="Menu.cs" />
-    <Compile Include="Objects\Category.cs" />
+    <Compile Include="Objects\CategoryObj.cs" />
+    <Compile Include="Objects\FileObj.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

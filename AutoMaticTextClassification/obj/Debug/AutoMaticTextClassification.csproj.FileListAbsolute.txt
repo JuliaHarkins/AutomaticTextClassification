@@ -1,0 +1,7 @@
+C:\Users\398905\Source\Repos\AutomaticTextClassification\AutoMaticTextClassification\bin\Debug\AutoMaticTextClassification.exe.config
+C:\Users\398905\Source\Repos\AutomaticTextClassification\AutoMaticTextClassification\bin\Debug\AutoMaticTextClassification.exe
+C:\Users\398905\Source\Repos\AutomaticTextClassification\AutoMaticTextClassification\bin\Debug\AutoMaticTextClassification.pdb
+C:\Users\398905\Source\Repos\AutomaticTextClassification\AutoMaticTextClassification\obj\Debug\AutoMaticTextClassification.csprojAssemblyReference.cache
+C:\Users\398905\Source\Repos\AutomaticTextClassification\AutoMaticTextClassification\obj\Debug\AutoMaticTextClassification.csproj.CoreCompileInputs.cache
+C:\Users\398905\Source\Repos\AutomaticTextClassification\AutoMaticTextClassification\obj\Debug\AutoMaticTextClassification.exe
+C:\Users\398905\Source\Repos\AutomaticTextClassification\AutoMaticTextClassification\obj\Debug\AutoMaticTextClassification.pdb

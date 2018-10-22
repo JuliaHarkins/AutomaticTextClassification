@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoMaticTextClassification
+namespace AutomaticTextClassification
 {
     class Program
     {
