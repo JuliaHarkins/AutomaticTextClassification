@@ -21,14 +21,18 @@ namespace AutomaticTextClassification
 
         string[] RemoveLemmatizingWords(string text)
         {
-            List<string> revisedText = text.Split().ToList() ;
+            List<string> revisedText = text.Split().ToArray().ToList() ;
             if (_lemmatizingWords != null)
             {
-                foreach(string word in revisedText)
-                {
-                    if (_lemmatizingWords.Contains(word))
+                int i= revisedText.Count-1;
+                while (i != -1) {
+                    if (_lemmatizingWords.Contains(revisedText[i].ToLower()))
                     {
-                        revisedText.Remove(word);
+                        revisedText.Remove(revisedText[i]);
+                    }
+                    else
+                    {
+                        i--;
                     }
                 }
             }
@@ -38,15 +42,20 @@ namespace AutomaticTextClassification
         public void AddText(string text)
         {
             String[] revisedText = RemoveLemmatizingWords(text);
+            if(_wordAndCount == null)
+            {
+                Dictionary<string, int> kvp = new Dictionary<string, int>();
+                _wordAndCount = kvp;
+            }
             foreach(string word in revisedText)
             {
-                if (_wordAndCount.ContainsKey(word))
+                if (_wordAndCount.ContainsKey(word.ToLower()))
                 {
-                    _wordAndCount[word]++;
+                    _wordAndCount[word.ToLower()]++;
                 }
                 else
                 {
-                    _wordAndCount.Add(word, 1);
+                    _wordAndCount.Add(word.ToLower(), 1);
                 }
             }
         }

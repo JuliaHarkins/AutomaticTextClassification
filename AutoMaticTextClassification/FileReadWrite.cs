@@ -32,6 +32,10 @@ namespace AutomaticTextClassification
             }
         }
 
+        /// <summary>
+        /// gets all the training to train the AI
+        /// </summary>
+        /// <returns></returns>
         public FileObj[] GetTrainingData()
         {
             List<FileObj> trainingData = new List<FileObj>();
@@ -46,6 +50,10 @@ namespace AutomaticTextClassification
             return trainingData.ToArray();
         }
 
+        /// <summary>
+        /// takes the test data for the AI to analyse 
+        /// </summary>
+        /// <returns></returns>
         public FileObj[] GetTestData()
         {
             List<FileObj> testData = new List<FileObj>();
@@ -56,12 +64,14 @@ namespace AutomaticTextClassification
                 f.FileContent = File.ReadAllText(file);
                 testData.Add(f);
             }
-
             return testData.ToArray();
         }
 
         
-
+        /// <summary>
+        /// takes the lemmatizing words from the debug folder
+        /// </summary>
+        /// <returns></returns>
         public string[] GetLemmatizingWords()
         {
             List<string> lemmatizingWords = new List<string>();
@@ -73,18 +83,22 @@ namespace AutomaticTextClassification
                     lemmatizingWords.Add(line);
                 }
             }
-
             return lemmatizingWords.ToArray();
         }
 
+        /// <summary>
+        /// creates a folder to put the network into
+        /// </summary>
+        /// <param name="folderName"></param>
+        /// <param name="bayesingNetwork"></param>
+        /// <returns></returns>
         public bool SaveBayesingToFile(string folderName, List<CategoryObj> bayesingNetwork)
         {
             bool fileCreated = false;
 
-            //find out if the file already exists
+            //find out if the folder already exists
             if (!System.IO.Directory.Exists(_BayesingNetworkFolder+"\\"+folderName))
             {
-                
                 System.IO.Directory.CreateDirectory(folderName);
                 //create a file for each category known to the network
                 foreach (CategoryObj cat in bayesingNetwork)
@@ -102,36 +116,52 @@ namespace AutomaticTextClassification
             }
             return fileCreated;
         }
-
-        BayesingNetwork[] GetSavedBayesingNetworks()
+        /// <summary>
+        /// retrieves the networks from the folder.
+        /// </summary>
+        /// <returns></returns>
+        public BayesingNetwork[] GetSavedBayesingNetworks()
         {
+            //used to read the information from the file
             string line = "";
-            Dictionary<string, int> kvp = new Dictionary<string, int>();
+            
+            //list of networks
             List<BayesingNetwork> bayesingNetworks = new List<BayesingNetwork>();
+
+            //d is the directory which holds the networks infomation
             foreach (string d in Directory.GetDirectories(_BayesingNetworkFolder))
             {
-                
+                //contains the categories for the networks
                 List<CategoryObj> cat = new List<CategoryObj>();
+                
+                //file is the networks categories
                 foreach (string file in Directory.EnumerateFiles(_BayesingNetworkFolder + "\\" + d, "*.txt"))
                 {
-                    CategoryObj c = new CategoryObj(GetLemmatizingWords());
+                    CategoryObj c = new CategoryObj(GetLemmatizingWords())
+                    {
+                        Name = file
+                    };
+                    //collects the dictionary information for the categories
                     using (StreamReader sr = new StreamReader(_BayesingNetworkFolder + "\\" + d + "\\" + file)){
-                        
-                        c.Name = file;
+
+                        //new dictionary entry to be added to the category
+                        Dictionary<string, int> kvp = new Dictionary<string, int>();
                         while((line = sr.ReadLine()) != null)
                         {
+                            //splits the key from the value it holds
                             string[] WordAndCountSplit = line.Split(',');
                             kvp.Add(WordAndCountSplit[0], int.Parse(WordAndCountSplit[1]));
                         }
                         c.WordAndCount = kvp;
                     }
                     cat.Add(c);
-
                 }
-                BayesingNetwork bn = new BayesingNetwork(cat);
+                BayesingNetwork bn = new BayesingNetwork(cat)
+                {
+                    Name = d
+                };
                 bayesingNetworks.Add(bn);
             }
-
             return bayesingNetworks.ToArray();
         }
     }

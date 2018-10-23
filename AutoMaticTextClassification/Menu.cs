@@ -9,6 +9,10 @@ namespace AutomaticTextClassification
     class Menu
     {
         BayesingNetwork _bn;
+        FileReadWrite frw = new FileReadWrite();
+        /// <summary>
+        /// Loads the users main menu
+        /// </summary>
         public void StartUp()
         {
             string menuOption;
@@ -29,7 +33,7 @@ namespace AutomaticTextClassification
                         _bn.Train();
                         break;
                     case "2":
-
+                        menu = ChooseABaysingNetwork(frw.GetSavedBayesingNetworks());
                         break;
                     case "q":
                         break;
@@ -41,25 +45,69 @@ namespace AutomaticTextClassification
             } while (menu);
 
         }
+        bool ChooseABaysingNetwork(BayesingNetwork[] bayesingNetworks)
+        {
+            Console.Clear();
+            bool ReloadMenu= true;
+            string userInput="";
+            int menuOption = 0;
+            if (bayesingNetworks.Count()>0)
+            {
+                Console.WriteLine("Please Select an AI to use");
+                foreach (BayesingNetwork bn in bayesingNetworks)
+                {
+                    menuOption++;
+                    Console.WriteLine(menuOption+". "+ bn.Name);
+                }
+                userInput = Console.ReadLine();
+                if (int.TryParse(userInput, out int result))
+                {
+                    _bn = bayesingNetworks[result - 1];
+                    ReloadMenu = false;
+                }
+                else
+                {
+                    Console.WriteLine("invalid option");
+                    Console.WriteLine("Returning to Main Menu");
+                    Console.ReadKey();
+                }
+            }
+            else
+            {
+                Console.WriteLine("there are no trained AI avalible");
+                Console.WriteLine("Returning to Main Menu");
+                Console.ReadKey();
+            }
 
+            return ReloadMenu;
+        }
+        /// <summary>
+        /// asks the user if they wish to save their AI
+        /// </summary>
         public void SaveBayesingNetwork()
         {
-            bool menu = false;
+            bool menu = false;  //checks if the menu 
             bool failedFile = false;
-            string userInput = "";
-            Console.Clear();
-            Console.WriteLine("AI is Trained");
-            Console.WriteLine("Would you like to save the AI (y/n)");
-            userInput = Console.ReadLine();
-            FileReadWrite frw = new FileReadWrite();
+            
             do {
+                Console.Clear();
+                string userInput = "";
                 if (failedFile)
                 {
-                    Console.Clear();
+                    
                     Console.WriteLine("A folder with that name already exists, unable to save network under that name");
                     Console.WriteLine("Would you like to save the AI under a different name?(y/n)");
                     userInput = Console.ReadLine();
                 }
+                else
+                {
+                    Console.WriteLine("AI is Trained");
+                    Console.WriteLine("Would you like to save the AI (y/n)");
+                    userInput = Console.ReadLine();
+                }
+                Console.Clear();
+                failedFile = false;
+                menu = false;
                 switch (userInput)
                 {
                     case "y":
@@ -67,11 +115,14 @@ namespace AutomaticTextClassification
                         {
                             Console.WriteLine("What do you wish to save the folder as?");
                             userInput = Console.ReadLine();
-                        } while (userInput != "");
+                        } while (userInput == "");
                         failedFile = frw.SaveBayesingToFile(userInput, _bn.KnownInfomation);
                         break;
 
                     case "n":
+                        Console.WriteLine("Are you sure you wish to leave without saving? (y/n)");
+                        userInput = Console.ReadLine();
+                        menu = (userInput == "y") ? false : true; 
                         break;
 
                     default:
@@ -80,8 +131,11 @@ namespace AutomaticTextClassification
                 } 
             } while (menu || failedFile);
         }
-
-
+        /// <summary>
+        /// Returns the result of the AI using the test data.
+        /// </summary>
+        /// <param name="goverment"></param>
+        /// <param name="percentageCertainty"></param>
         public void Result(string goverment, double percentageCertainty)
         {
 

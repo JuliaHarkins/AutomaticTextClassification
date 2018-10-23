@@ -29,13 +29,19 @@ namespace AutomaticTextClassification
             FileObj[] files = frw.GetTrainingData();
             List<CategoryObj> categories = new List<CategoryObj>();
             bool exists = false;
+            //classifies the categories using the files
             foreach(FileObj f in files)
             {
                 string category = "";
                 foreach(char c in f.FileName)
-                    if (c != '0' || c != '1' || c != '2' || c != '3' || c != '4' || c != '5' || c != '6' || c != '7' || c != '8' || c != '9' || c != '.') {
+                    if (c != '0' && c != '1' && c != '2' && c != '3' && c != '4' && c != '5' && c != '6' && c != '7' && c != '8' && c != '9' && c != '.') {
                         category += c;
                     }
+                    else
+                    {
+                        break;
+                    }
+                exists = false;
                 foreach(CategoryObj cat in categories)
                 {
                     if(cat.Name == category)
