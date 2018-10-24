@@ -73,7 +73,7 @@ namespace AutomaticTextClassification
                 userInput = Console.ReadLine();
                 if (int.TryParse(userInput, out int result))
                 {
-                    _bn.AnalisingText = testData[result - 1];
+                    _bn.GetAnalizedText( testData[result - 1]);
                     ReloadMenu = false;
                 }
                 else
@@ -91,9 +91,6 @@ namespace AutomaticTextClassification
             }
 
             return ReloadMenu;
-
-
-            return true;
         }
         bool ChooseABaysingNetwork(BayesingNetwork[] bayesingNetworks)
         {

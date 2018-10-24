@@ -110,9 +110,9 @@ namespace AutomaticTextClassification
                     using (StreamWriter sr = new StreamWriter(filePath))
                     {
                         //write the words and how offten they appear 
-                        foreach (KeyValuePair<string, int> kvp in cat.WordAndCount)
+                        foreach (KeyValuePair<string, WordCalulationsObj> kvp in cat.WordInformation)
                         {
-                            sr.WriteLine(kvp.Key + "+" + kvp.Value);
+                            sr.WriteLine(kvp.Key + "+" + kvp.Value.AmountOfWords+"+" + kvp.Value.Percentage);
                         }
                     }
                 }
@@ -149,14 +149,20 @@ namespace AutomaticTextClassification
                     using (StreamReader sr = new StreamReader(file)){
 
                         //new dictionary entry to be added to the category
-                        Dictionary<string, int> kvp = new Dictionary<string, int>();
+                        Dictionary<string, WordCalulationsObj> kvp = new Dictionary<string, WordCalulationsObj>();
                         while((line = sr.ReadLine()) != null)
                         {
                             //splits the key from the value it holds
                             string[] WordAndCountSplit = line.Split('+');
-                            kvp.Add(WordAndCountSplit[0], int.Parse(WordAndCountSplit[1]));
+
+                            WordCalulationsObj wc = new WordCalulationsObj();
+
+                            wc.AmountOfWords = int.Parse(WordAndCountSplit[1]);
+                            wc.Percentage = double.Parse(WordAndCountSplit[2]);
+
+                            kvp.Add(WordAndCountSplit[0], wc);
                         }
-                        c.WordAndCount = kvp;
+                        c.WordInformation = kvp;
                     }
                     cat.Add(c);
                 }

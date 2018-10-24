@@ -10,12 +10,14 @@ namespace AutomaticTextClassification
     {
         string[] _lemmatizingWords;
         string _name;
-        Dictionary<string, int> _wordAndCount;
+        Dictionary<string, WordCalulationsObj> _wordInformation;
+        int _documentsUsed;
         public string Name { get { return _name; } set { _name = value; } }
-        public Dictionary<string, int> WordAndCount { get {return _wordAndCount; } set { _wordAndCount = value; } }
+        public Dictionary<string, WordCalulationsObj> WordInformation { get {return _wordInformation; } set { _wordInformation = value; } }
 
         public CategoryObj(string[] lemmatizingWords)
         {
+            _documentsUsed = 0;
             _lemmatizingWords = lemmatizingWords;
         }
 
@@ -41,33 +43,50 @@ namespace AutomaticTextClassification
 
         public void AddText(string text)
         {
+            _documentsUsed++;
             String[] revisedText = RemoveLemmatizingWords(text);
-            if(_wordAndCount == null)
+            if(_wordInformation == null)
             {
-                Dictionary<string, int> kvp = new Dictionary<string, int>();
-                _wordAndCount = kvp;
+                Dictionary<string, WordCalulationsObj> kvp = new Dictionary<string, WordCalulationsObj>();
+                _wordInformation = kvp;
             }
             foreach(string word in revisedText)
             {
-                if (_wordAndCount.ContainsKey(word.ToLower()))
+                if (_wordInformation.ContainsKey(word.ToLower()))
                 {
-                    _wordAndCount[word.ToLower()]++;
+                    _wordInformation[word.ToLower()].AmountOfWords++;
                 }
                 else
                 {
-                    _wordAndCount.Add(word.ToLower(), 1);
+                    WordCalulationsObj wc = new WordCalulationsObj();
+                    wc.AmountOfWords = 1;
+                    _wordInformation.Add(word.ToLower(), wc);
                 }
+            }
+            foreach(KeyValuePair<string, WordCalulationsObj> wc in _wordInformation)
+            {
+                wc.Value.Percentage = (double)(wc.Value.AmountOfWords+1) / GetTotalWords();
             }
         }
 
         public int GetTotalWords()
         {
             int currentTotal = 0;
-            foreach (int count in _wordAndCount.Values)
+            foreach (WordCalulationsObj wc in _wordInformation.Values)
             {
-                currentTotal += count;
+                currentTotal += wc.AmountOfWords;
             }
             return currentTotal;
+        }
+        public double WordPercenageForCategory(string key)
+        {
+            double percent = 0;
+            if(_wordInformation.ContainsKey(key))
+            {
+                WordInformation.TryGetValue(key,out WordCalulationsObj count);
+            }
+
+            return percent;
         }
 
     }

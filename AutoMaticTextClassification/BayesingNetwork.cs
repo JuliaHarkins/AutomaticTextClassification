@@ -9,8 +9,7 @@ namespace AutomaticTextClassification
     class BayesingNetwork
     {
         List<CategoryObj> _knownInformation;
-        FileObj _analisingText;
-        public FileObj AnalisingText { set { _analisingText= value; } }
+        CategoryObj _analisingText;
         public List<CategoryObj> KnownInfomation { get { return _knownInformation; } }
         public string Name { get; set; }
         public BayesingNetwork()
@@ -62,8 +61,37 @@ namespace AutomaticTextClassification
             }
             _knownInformation = categories;
         }
-        
+        public void GetAnalizedText(FileObj file)
+        {
+            FileReadWrite frw = new FileReadWrite();
+            CategoryObj analisingText = new CategoryObj(frw.GetLemmatizingWords());
+            analisingText.Name = file.FileName;
+
+            analisingText.AddText(file.FileContent);
+            _analisingText = analisingText;
+        }
+
+        public List<string> GetAnalisedResult()
+        {
+            List<string> ResultsTable = new List<string>();
+            foreach(CategoryObj cat in _knownInformation)
+            {
+                double chance=0;
+                foreach (KeyValuePair<string, WordCalulationsObj> kvp in cat.WordInformation)
+                {
+                    if (_analisingText.WordInformation.ContainsKey(kvp.Key))
+                    {
+                        //stuff
 
 
+                    }
+                }
+                string catResult = cat.Name + chance.ToString();
+                ResultsTable.Add(catResult);
+
+                
+            }
+            return ResultsTable;
+        }
     }
 }
