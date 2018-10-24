@@ -61,7 +61,7 @@ namespace AutomaticTextClassification
             foreach (string file in Directory.EnumerateFiles(_TestDataFolder, "*.txt"))
             {
                 FileObj f = new FileObj();
-                f.FileName = file;
+                f.FileName = Path.GetFileName(file);
                 string content = File.ReadAllText(file);
                 f.FileContent = RemovePunctuation(content);
                 testData.Add(f);
@@ -143,7 +143,7 @@ namespace AutomaticTextClassification
                 {
                     CategoryObj c = new CategoryObj(GetLemmatizingWords())
                     {
-                        Name = file
+                        Name = Path.GetFileName(file)
                     };
                     //collects the dictionary information for the categories
                     using (StreamReader sr = new StreamReader(file)){
@@ -168,6 +168,7 @@ namespace AutomaticTextClassification
             }
             return bayesingNetworks.ToArray();
         }
+
         string RemovePunctuation(string s)
         {
             StringBuilder sb = new StringBuilder();

@@ -36,8 +36,15 @@ namespace AutomaticTextClassification
                         break;
                     case "2":
                         menu = ChooseABaysingNetwork(frw.GetSavedBayesingNetworks());
+                        if (!menu)
+                        {
+                            SelectText();
+                        }
                         break;
                     case "q":
+                        Console.Clear();
+                        Console.WriteLine("Exiting Program");
+                        Console.ReadKey();
                         menu = false;
                         break;
 
@@ -47,6 +54,46 @@ namespace AutomaticTextClassification
                 }
             } while (menu);
 
+        }
+        bool SelectText()
+        {
+            Console.Clear();
+            FileObj[] testData = frw.GetTestData();
+            bool ReloadMenu = true;
+            string userInput = "";
+            int menuOption = 0;
+            if (testData.Count() > 0)
+            {
+                Console.WriteLine("Please Select an Test document to use");
+                foreach (FileObj f in testData)
+                {
+                    menuOption++;
+                    Console.WriteLine(menuOption + ". " + f.FileName);
+                }
+                userInput = Console.ReadLine();
+                if (int.TryParse(userInput, out int result))
+                {
+                    _bn.AnalisingText = testData[result - 1];
+                    ReloadMenu = false;
+                }
+                else
+                {
+                    Console.WriteLine("invalid option");
+                    Console.WriteLine("Returning to Main Menu");
+                    Console.ReadKey();
+                }
+            }
+            else
+            {
+                Console.WriteLine("there are no tests documents avalible");
+                Console.WriteLine("Returning to Main Menu");
+                Console.ReadKey();
+            }
+
+            return ReloadMenu;
+
+
+            return true;
         }
         bool ChooseABaysingNetwork(BayesingNetwork[] bayesingNetworks)
         {

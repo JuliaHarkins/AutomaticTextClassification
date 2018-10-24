@@ -10,6 +10,7 @@ namespace AutomaticTextClassification
     {
         List<CategoryObj> _knownInformation;
         FileObj _analisingText;
+        public FileObj AnalisingText { set { _analisingText= value; } }
         public List<CategoryObj> KnownInfomation { get { return _knownInformation; } }
         public string Name { get; set; }
         public BayesingNetwork()
