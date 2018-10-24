@@ -42,8 +42,9 @@ namespace AutomaticTextClassification
             foreach (string file in Directory.EnumerateFiles(_TrainingDataFolder, "*.txt"))
             {
                 FileObj f = new FileObj();
-                f.FileName = file;
-                f.FileContent = File.ReadAllText(file);
+                f.FileName = Path.GetFileName(file);
+                string content = File.ReadAllText(file);
+                f.FileContent = RemovePunctuation(content);
                 trainingData.Add(f);
             }
 
@@ -61,7 +62,8 @@ namespace AutomaticTextClassification
             {
                 FileObj f = new FileObj();
                 f.FileName = file;
-                f.FileContent = File.ReadAllText(file);
+                string content = File.ReadAllText(file);
+                f.FileContent = RemovePunctuation(content);
                 testData.Add(f);
             }
             return testData.ToArray();
@@ -94,27 +96,29 @@ namespace AutomaticTextClassification
         /// <returns></returns>
         public bool SaveBayesingToFile(string folderName, List<CategoryObj> bayesingNetwork)
         {
-            bool fileCreated = false;
-
+            bool fileFailed = true;
+            string folderPath = _BayesingNetworkFolder + "\\" + folderName;
             //find out if the folder already exists
-            if (!System.IO.Directory.Exists(_BayesingNetworkFolder+"\\"+folderName))
+            if (!System.IO.Directory.Exists(folderPath))
             {
-                System.IO.Directory.CreateDirectory(folderName);
+                System.IO.Directory.CreateDirectory(folderPath);
                 //create a file for each category known to the network
                 foreach (CategoryObj cat in bayesingNetwork)
                 {
-                    using (StreamWriter sr = new StreamWriter(_BayesingNetworkFolder + "\\" + folderName + "\\" + cat.Name + ".txt"))
+                    string filePath = folderPath+"\\" + cat.Name + ".txt";
+                    //File.Create(filePath);
+                    using (StreamWriter sr = new StreamWriter(filePath))
                     {
                         //write the words and how offten they appear 
                         foreach (KeyValuePair<string, int> kvp in cat.WordAndCount)
                         {
-                            sr.WriteLine(kvp.Key + "," + kvp.Value);
+                            sr.WriteLine(kvp.Key + "+" + kvp.Value);
                         }
                     }
                 }
-                fileCreated = true;
+                fileFailed = false;
             }
-            return fileCreated;
+            return fileFailed;
         }
         /// <summary>
         /// retrieves the networks from the folder.
@@ -135,21 +139,21 @@ namespace AutomaticTextClassification
                 List<CategoryObj> cat = new List<CategoryObj>();
                 
                 //file is the networks categories
-                foreach (string file in Directory.EnumerateFiles(_BayesingNetworkFolder + "\\" + d, "*.txt"))
+                foreach (string file in Directory.EnumerateFiles( d, "*.txt"))
                 {
                     CategoryObj c = new CategoryObj(GetLemmatizingWords())
                     {
                         Name = file
                     };
                     //collects the dictionary information for the categories
-                    using (StreamReader sr = new StreamReader(_BayesingNetworkFolder + "\\" + d + "\\" + file)){
+                    using (StreamReader sr = new StreamReader(file)){
 
                         //new dictionary entry to be added to the category
                         Dictionary<string, int> kvp = new Dictionary<string, int>();
                         while((line = sr.ReadLine()) != null)
                         {
                             //splits the key from the value it holds
-                            string[] WordAndCountSplit = line.Split(',');
+                            string[] WordAndCountSplit = line.Split('+');
                             kvp.Add(WordAndCountSplit[0], int.Parse(WordAndCountSplit[1]));
                         }
                         c.WordAndCount = kvp;
@@ -163,6 +167,16 @@ namespace AutomaticTextClassification
                 bayesingNetworks.Add(bn);
             }
             return bayesingNetworks.ToArray();
+        }
+        string RemovePunctuation(string s)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Char c in s)
+            {
+                if (!char.IsPunctuation(c))
+                    sb.Append(c);
+            }
+            return sb.ToString();
         }
     }
 }

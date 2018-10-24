@@ -31,11 +31,14 @@ namespace AutomaticTextClassification
                     case "1":
                         _bn = new BayesingNetwork();
                         _bn.Train();
+                        SaveBayesingNetwork();
+                        menu = true;
                         break;
                     case "2":
                         menu = ChooseABaysingNetwork(frw.GetSavedBayesingNetworks());
                         break;
                     case "q":
+                        menu = false;
                         break;
 
                     default:
@@ -116,6 +119,7 @@ namespace AutomaticTextClassification
                             Console.WriteLine("What do you wish to save the folder as?");
                             userInput = Console.ReadLine();
                         } while (userInput == "");
+                        _bn.Name = userInput;
                         failedFile = frw.SaveBayesingToFile(userInput, _bn.KnownInfomation);
                         break;
 

@@ -9,7 +9,7 @@ namespace AutomaticTextClassification
     class BayesingNetwork
     {
         List<CategoryObj> _knownInformation;
-        string _analisingText;
+        FileObj _analisingText;
         public List<CategoryObj> KnownInfomation { get { return _knownInformation; } }
         public string Name { get; set; }
         public BayesingNetwork()
@@ -59,8 +59,7 @@ namespace AutomaticTextClassification
                     categories.Add(newCategory);
                 }
             }
-            Menu m = new Menu();
-            m.SaveBayesingNetwork();
+            _knownInformation = categories;
         }
         
 
