@@ -40,6 +40,11 @@ namespace AutomaticTextClassification
                         {
                             SelectText();
                         }
+                        string[] result = _bn.GetAnalisedResult().ToArray();
+                        foreach (string s in result)
+                        {
+                            Console.WriteLine(s);
+                        }
                         break;
                     case "q":
                         Console.Clear();

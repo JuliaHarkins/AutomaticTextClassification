@@ -105,14 +105,23 @@ namespace AutomaticTextClassification
                 //create a file for each category known to the network
                 foreach (CategoryObj cat in bayesingNetwork)
                 {
+                    int i = 0;
                     string filePath = folderPath+"\\" + cat.Name + ".txt";
                     //File.Create(filePath);
                     using (StreamWriter sr = new StreamWriter(filePath))
                     {
-                        //write the words and how offten they appear 
-                        foreach (KeyValuePair<string, WordCalulationsObj> kvp in cat.WordInformation)
+                        if (i == 0)
                         {
-                            sr.WriteLine(kvp.Key + "+" + kvp.Value.AmountOfWords+"+" + kvp.Value.Percentage);
+                            sr.WriteLine(cat.DocumentsUsed);
+                            i++;
+                        }
+                        else
+                        {
+                            //write the words and how offten they appear 
+                            foreach (KeyValuePair<string, int> kvp in cat.WordInformation)
+                            {
+                                sr.WriteLine(kvp.Key + "+" + kvp.Value);
+                            }
                         }
                     }
                 }
@@ -137,7 +146,7 @@ namespace AutomaticTextClassification
             {
                 //contains the categories for the networks
                 List<CategoryObj> cat = new List<CategoryObj>();
-                
+                int i = 0;
                 //file is the networks categories
                 foreach (string file in Directory.EnumerateFiles( d, "*.txt"))
                 {
@@ -147,24 +156,29 @@ namespace AutomaticTextClassification
                     };
                     //collects the dictionary information for the categories
                     using (StreamReader sr = new StreamReader(file)){
-
-                        //new dictionary entry to be added to the category
-                        Dictionary<string, WordCalulationsObj> kvp = new Dictionary<string, WordCalulationsObj>();
-                        while((line = sr.ReadLine()) != null)
+                        if (i == 0)
                         {
-                            //splits the key from the value it holds
-                            string[] WordAndCountSplit = line.Split('+');
-
-                            WordCalulationsObj wc = new WordCalulationsObj();
-
-                            wc.AmountOfWords = int.Parse(WordAndCountSplit[1]);
-                            wc.Percentage = double.Parse(WordAndCountSplit[2]);
-
-                            kvp.Add(WordAndCountSplit[0], wc);
+                            c.DocumentsUsed = int.Parse(sr.ReadLine());
+                            i++;
                         }
-                        c.WordInformation = kvp;
+                        else
+                        {
+                            //new dictionary entry to be added to the category
+                            Dictionary<string, int> kvp = new Dictionary<string, int>();
+                            while ((line = sr.ReadLine()) != null)
+                            {
+                                //splits the key from the value it holds
+                                string[] WordAndCountSplit = line.Split('+');
+
+                                int amountOfWords = int.Parse(WordAndCountSplit[1]);
+
+                                kvp.Add(WordAndCountSplit[0], amountOfWords);
+                            }
+                            c.WordInformation = kvp;
+                        }
                     }
                     cat.Add(c);
+                    
                 }
                 BayesingNetwork bn = new BayesingNetwork(cat)
                 {

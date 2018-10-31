@@ -47,7 +47,6 @@
     <Compile Include="Menu.cs" />
     <Compile Include="Objects\CategoryObj.cs" />
     <Compile Include="Objects\FileObj.cs" />
-    <Compile Include="Objects\WordCalulationsObj.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

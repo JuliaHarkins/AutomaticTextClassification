@@ -73,20 +73,40 @@ namespace AutomaticTextClassification
 
         public List<string> GetAnalisedResult()
         {
+            int totalWords = 0;
+            int totalCatDoc = 0;
             List<string> ResultsTable = new List<string>();
-            foreach(CategoryObj cat in _knownInformation)
+            foreach (CategoryObj cat in _knownInformation)
+            {
+                totalCatDoc += cat.DocumentsUsed;
+                totalWords += cat.GetTotalWords();
+            }
+
+            foreach (CategoryObj cat in _knownInformation)
             {
                 double chance=0;
-                foreach (KeyValuePair<string, WordCalulationsObj> kvp in cat.WordInformation)
+                string catName = cat.Name;
+                foreach (KeyValuePair<string, int> kvp in cat.WordInformation)
                 {
+
                     if (_analisingText.WordInformation.ContainsKey(kvp.Key))
                     {
-                        //stuff
-
-
+                        if (chance == 0)
+                        {
+                            chance = (double)(cat.WordInformation[kvp.Key] + 1) / (cat.GetTotalWords() + totalWords);
+                        }
+                        else
+                        {
+                            chance *= (double)(cat.WordInformation[kvp.Key] + 1) / (cat.GetTotalWords() + totalWords);
+                        }
                     }
                 }
-                string catResult = cat.Name + chance.ToString();
+                if (chance != 0)
+                {
+                    chance *= cat.DocumentsUsed / totalCatDoc;
+                }
+
+                string catResult = cat.Name + String.Format(" %1$,.2f ", chance.ToString());
                 ResultsTable.Add(catResult);
 
                 

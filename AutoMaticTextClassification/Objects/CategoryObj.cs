@@ -10,10 +10,11 @@ namespace AutomaticTextClassification
     {
         string[] _lemmatizingWords;
         string _name;
-        Dictionary<string, WordCalulationsObj> _wordInformation;
+        Dictionary<string, int> _wordInformation;
         int _documentsUsed;
+        public int DocumentsUsed { get { return _documentsUsed; } set { _documentsUsed = value; } }
         public string Name { get { return _name; } set { _name = value; } }
-        public Dictionary<string, WordCalulationsObj> WordInformation { get {return _wordInformation; } set { _wordInformation = value; } }
+        public Dictionary<string, int> WordInformation { get {return _wordInformation; } set { _wordInformation = value; } }
 
         public CategoryObj(string[] lemmatizingWords)
         {
@@ -47,46 +48,32 @@ namespace AutomaticTextClassification
             String[] revisedText = RemoveLemmatizingWords(text);
             if(_wordInformation == null)
             {
-                Dictionary<string, WordCalulationsObj> kvp = new Dictionary<string, WordCalulationsObj>();
+                Dictionary<string, int> kvp = new Dictionary<string, int>();
                 _wordInformation = kvp;
             }
             foreach(string word in revisedText)
             {
+                int AmountOfWords=0;
                 if (_wordInformation.ContainsKey(word.ToLower()))
                 {
-                    _wordInformation[word.ToLower()].AmountOfWords++;
+                    _wordInformation[word.ToLower()]++;
                 }
                 else
                 {
-                    WordCalulationsObj wc = new WordCalulationsObj();
-                    wc.AmountOfWords = 1;
-                    _wordInformation.Add(word.ToLower(), wc);
+                    AmountOfWords = 1;
+                    _wordInformation.Add(word.ToLower(), AmountOfWords);
                 }
-            }
-            foreach(KeyValuePair<string, WordCalulationsObj> wc in _wordInformation)
-            {
-                wc.Value.Percentage = (double)(wc.Value.AmountOfWords+1) / GetTotalWords();
             }
         }
 
         public int GetTotalWords()
         {
             int currentTotal = 0;
-            foreach (WordCalulationsObj wc in _wordInformation.Values)
+            foreach (KeyValuePair<string, int> kvp in _wordInformation)
             {
-                currentTotal += wc.AmountOfWords;
+                currentTotal += kvp.Value;
             }
             return currentTotal;
-        }
-        public double WordPercenageForCategory(string key)
-        {
-            double percent = 0;
-            if(_wordInformation.ContainsKey(key))
-            {
-                WordInformation.TryGetValue(key,out WordCalulationsObj count);
-            }
-
-            return percent;
         }
 
     }
