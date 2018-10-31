@@ -105,25 +105,17 @@ namespace AutomaticTextClassification
                 //create a file for each category known to the network
                 foreach (CategoryObj cat in bayesingNetwork)
                 {
-                    int i = 0;
                     string filePath = folderPath+"\\" + cat.Name + ".txt";
-                    //File.Create(filePath);
-                    using (StreamWriter sr = new StreamWriter(filePath))
+                    
+                    List<string> infomation = new List<string>();
+                    
+                    infomation.Add(cat.DocumentsUsed.ToString());
+
+                    foreach (KeyValuePair<string, int> kvp in cat.WordInformation)
                     {
-                        if (i == 0)
-                        {
-                            sr.WriteLine(cat.DocumentsUsed);
-                            i++;
-                        }
-                        else
-                        {
-                            //write the words and how offten they appear 
-                            foreach (KeyValuePair<string, int> kvp in cat.WordInformation)
-                            {
-                                sr.WriteLine(kvp.Key + "+" + kvp.Value);
-                            }
-                        }
+                        infomation.Add(kvp.Key + "+" + kvp.Value);
                     }
+                    File.WriteAllLines(filePath, infomation);
                 }
                 fileFailed = false;
             }
@@ -146,7 +138,6 @@ namespace AutomaticTextClassification
             {
                 //contains the categories for the networks
                 List<CategoryObj> cat = new List<CategoryObj>();
-                int i = 0;
                 //file is the networks categories
                 foreach (string file in Directory.EnumerateFiles( d, "*.txt"))
                 {
@@ -155,31 +146,26 @@ namespace AutomaticTextClassification
                         Name = Path.GetFileName(file)
                     };
                     //collects the dictionary information for the categories
-                    using (StreamReader sr = new StreamReader(file)){
-                        if (i == 0)
-                        {
-                            c.DocumentsUsed = int.Parse(sr.ReadLine());
-                            i++;
-                        }
-                        else
-                        {
-                            //new dictionary entry to be added to the category
-                            Dictionary<string, int> kvp = new Dictionary<string, int>();
-                            while ((line = sr.ReadLine()) != null)
-                            {
-                                //splits the key from the value it holds
-                                string[] WordAndCountSplit = line.Split('+');
 
-                                int amountOfWords = int.Parse(WordAndCountSplit[1]);
+                    string[] information = File.ReadAllLines(file);
 
-                                kvp.Add(WordAndCountSplit[0], amountOfWords);
-                            }
-                            c.WordInformation = kvp;
-                        }
+                    c.DocumentsUsed = int.Parse(information[0]);
+                    Dictionary<string, int> kvp = new Dictionary<string, int>();
+                    for (int i = 1; i<information.Length; i++)
+                    {
+                        //splits the key from the value it holds
+                        string[] WordAndCountSplit = information[i].Split('+');
+
+                        int amountOfWords = int.Parse(WordAndCountSplit[1]);
+
+                        kvp.Add(WordAndCountSplit[0], amountOfWords);
+
                     }
-                    cat.Add(c);
-                    
+                    //new dictionary entry to be added to the category
+                    c.WordInformation = kvp; 
+                    cat.Add(c);                    
                 }
+
                 BayesingNetwork bn = new BayesingNetwork(cat)
                 {
                     Name = d

@@ -75,6 +75,7 @@ namespace AutomaticTextClassification
         {
             int totalWords = 0;
             int totalCatDoc = 0;
+            List<double> result = new List<double>();
             List<string> ResultsTable = new List<string>();
             foreach (CategoryObj cat in _knownInformation)
             {
@@ -93,24 +94,36 @@ namespace AutomaticTextClassification
                     {
                         if (chance == 0)
                         {
-                            chance = (double)(cat.WordInformation[kvp.Key] + 1) / (cat.GetTotalWords() + totalWords);
+                            double top = (cat.WordInformation[kvp.Key] + 1);
+                            double bot = ( cat.WordInformation.Sum(x => x.Value) + totalWords);
+                            chance = Math.Log(top / bot);
                         }
                         else
                         {
-                            chance *= (double)(cat.WordInformation[kvp.Key] + 1) / (cat.GetTotalWords() + totalWords);
+                            double top = (cat.WordInformation[kvp.Key] + 1);
+                            double bot = (cat.WordInformation.Sum(x => x.Value) + totalWords);
+                            chance += Math.Log(top / bot);
                         }
                     }
                 }
                 if (chance != 0)
                 {
-                    chance *= cat.DocumentsUsed / totalCatDoc;
+                    chance += Math.Log((double)cat.DocumentsUsed / totalCatDoc);
                 }
-
-                string catResult = cat.Name + String.Format(" %1$,.2f ", chance.ToString());
-                ResultsTable.Add(catResult);
-
-                
+                double r = chance * -1;
+                result.Add(r);
             }
+            int i = 0;
+            int
+            foreach (int r in result)
+            {
+                string catResult = cat.Name + String.Format(" {0:2f} ", result(i).ToString());
+                i++;
+                ResultsTable.Add(catResult);
+            }
+            
+
+
             return ResultsTable;
         }
     }

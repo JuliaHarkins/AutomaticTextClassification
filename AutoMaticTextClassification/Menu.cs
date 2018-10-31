@@ -45,6 +45,7 @@ namespace AutomaticTextClassification
                         {
                             Console.WriteLine(s);
                         }
+                        Console.ReadKey();
                         break;
                     case "q":
                         Console.Clear();
