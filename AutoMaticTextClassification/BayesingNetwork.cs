@@ -73,10 +73,13 @@ namespace AutomaticTextClassification
 
         public List<string> GetAnalisedResult()
         {
-            int totalWords = 0;
-            int totalCatDoc = 0;
-            List<double> result = new List<double>();
-            List<string> ResultsTable = new List<string>();
+            double totalValue=0; //the value of all results added together
+            int totalWords = 0;   //the total words in all the documents      
+            int totalCatDoc = 0;  //the amount of categories
+            List<string> finalResult = new List<string>();  // the users results
+            Dictionary<string, double> catResultsTable = new Dictionary<string, double>(); //holds all the results
+
+            //gets total categories and total words
             foreach (CategoryObj cat in _knownInformation)
             {
                 totalCatDoc += cat.DocumentsUsed;
@@ -84,21 +87,21 @@ namespace AutomaticTextClassification
             }
 
             foreach (CategoryObj cat in _knownInformation)
-            {
-                double chance=0;
-                string catName = cat.Name;
+            {                
+                double chance=0; //running total of category number
                 foreach (KeyValuePair<string, int> kvp in cat.WordInformation)
                 {
 
                     if (_analisingText.WordInformation.ContainsKey(kvp.Key))
                     {
+                        //sets the first value
                         if (chance == 0)
                         {
                             double top = (cat.WordInformation[kvp.Key] + 1);
                             double bot = ( cat.WordInformation.Sum(x => x.Value) + totalWords);
                             chance = Math.Log(top / bot);
                         }
-                        else
+                        else//edits the value
                         {
                             double top = (cat.WordInformation[kvp.Key] + 1);
                             double bot = (cat.WordInformation.Sum(x => x.Value) + totalWords);
@@ -106,25 +109,27 @@ namespace AutomaticTextClassification
                         }
                     }
                 }
-                if (chance != 0)
+                if (chance != 0 && totalCatDoc !=0)
                 {
                     chance += Math.Log((double)cat.DocumentsUsed / totalCatDoc);
                 }
+
                 double r = chance * -1;
-                result.Add(r);
+                catResultsTable.Add(cat.Name, r);
+                totalValue += r;
             }
-            int i = 0;
-            int
-            foreach (int r in result)
+
+            foreach ( KeyValuePair<string, double> kvp in catResultsTable)
             {
-                string catResult = cat.Name + String.Format(" {0:2f} ", result(i).ToString());
-                i++;
-                ResultsTable.Add(catResult);
+                double percent = 0;
+                percent = Math.Log(kvp.Value / totalValue);
+                 string catResult = kvp.Key + " " + Math.Round(percent,3);
+                finalResult.Add(catResult);
             }
             
 
 
-            return ResultsTable;
+            return finalResult;
         }
     }
 }

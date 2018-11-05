@@ -126,10 +126,7 @@ namespace AutomaticTextClassification
         /// </summary>
         /// <returns></returns>
         public BayesingNetwork[] GetSavedBayesingNetworks()
-        {
-            //used to read the information from the file
-            string line = "";
-            
+        {            
             //list of networks
             List<BayesingNetwork> bayesingNetworks = new List<BayesingNetwork>();
 
