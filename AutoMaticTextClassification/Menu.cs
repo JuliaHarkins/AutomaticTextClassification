@@ -36,7 +36,7 @@ namespace AutomaticTextClassification
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine("File error, unable to read tringin data");
+                            Console.WriteLine("File error, unable to read trining data");
                         }
                         SaveBayesingNetwork();
                         menu = true;
