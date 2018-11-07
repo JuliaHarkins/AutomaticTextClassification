@@ -130,44 +130,51 @@ namespace AutomaticTextClassification
             //list of networks
             List<BayesingNetwork> bayesingNetworks = new List<BayesingNetwork>();
 
-            //d is the directory which holds the networks infomation
-            foreach (string d in Directory.GetDirectories(_BayesingNetworkFolder))
+            try
             {
-                //contains the categories for the networks
-                List<CategoryObj> cat = new List<CategoryObj>();
-                //file is the networks categories
-                foreach (string file in Directory.EnumerateFiles( d, "*.txt"))
+                //d is the directory which holds the networks infomation
+                foreach (string d in Directory.GetDirectories(_BayesingNetworkFolder))
                 {
-                    CategoryObj c = new CategoryObj(GetLemmatizingWords())
+                    //contains the categories for the networks
+                    List<CategoryObj> cat = new List<CategoryObj>();
+                    //file is the networks categories
+                    foreach (string file in Directory.EnumerateFiles(d, "*.txt"))
                     {
-                        Name = Path.GetFileName(file)
-                    };
-                    //collects the dictionary information for the categories
+                        CategoryObj c = new CategoryObj(GetLemmatizingWords())
+                        {
+                            Name = Path.GetFileName(file)
+                        };
+                        //collects the dictionary information for the categories
 
-                    string[] information = File.ReadAllLines(file);
+                        string[] information = File.ReadAllLines(file);
 
-                    c.DocumentsUsed = int.Parse(information[0]);
-                    Dictionary<string, int> kvp = new Dictionary<string, int>();
-                    for (int i = 1; i<information.Length; i++)
-                    {
-                        //splits the key from the value it holds
-                        string[] WordAndCountSplit = information[i].Split('+');
+                        c.DocumentsUsed = int.Parse(information[0]);
+                        Dictionary<string, int> kvp = new Dictionary<string, int>();
+                        for (int i = 1; i < information.Length; i++)
+                        {
+                            //splits the key from the value it holds
+                            string[] WordAndCountSplit = information[i].Split('+');
 
-                        int amountOfWords = int.Parse(WordAndCountSplit[1]);
+                            int amountOfWords = int.Parse(WordAndCountSplit[1]);
 
-                        kvp.Add(WordAndCountSplit[0], amountOfWords);
+                            kvp.Add(WordAndCountSplit[0], amountOfWords);
 
+                        }
+                        //new dictionary entry to be added to the category
+                        c.WordInformation = kvp;
+                        cat.Add(c);
                     }
-                    //new dictionary entry to be added to the category
-                    c.WordInformation = kvp; 
-                    cat.Add(c);                    
-                }
 
-                BayesingNetwork bn = new BayesingNetwork(cat)
-                {
-                    Name = d
-                };
-                bayesingNetworks.Add(bn);
+                    BayesingNetwork bn = new BayesingNetwork(cat)
+                    {
+                        Name = d
+                    };
+                    bayesingNetworks.Add(bn);
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("File erroe, please check the files are input corretly");
             }
             return bayesingNetworks.ToArray();
         }

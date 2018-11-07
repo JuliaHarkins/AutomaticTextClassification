@@ -30,7 +30,14 @@ namespace AutomaticTextClassification
                 {
                     case "1":
                         _bn = new BayesingNetwork();
-                        _bn.Train();
+                        try
+                        {
+                            _bn.Train();
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("File error, unable to read tringin data");
+                        }
                         SaveBayesingNetwork();
                         menu = true;
                         break;
@@ -40,17 +47,29 @@ namespace AutomaticTextClassification
                         {
                             SelectText();
                         }
-                        string[] result = _bn.GetAnalisedResult().ToArray();
-                        foreach (string s in result)
+                        if (_bn != null)
                         {
-                            Console.WriteLine(s);
+                            string[] result = _bn.GetAnalisedResult().ToArray();
+
+                            if (result.Count() != 0)
+                            {
+                                Console.WriteLine("The results of the analised text are");
+                                int i = 1;
+                                foreach (string s in result)
+                                {
+                                    Console.WriteLine(i + ". " + s);
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("No results avalible.");
+                            }
                         }
-                        Console.ReadKey();
                         break;
                     case "q":
                         Console.Clear();
                         Console.WriteLine("Exiting Program");
-                        Console.ReadKey();
                         menu = false;
                         break;
 
@@ -58,6 +77,7 @@ namespace AutomaticTextClassification
                         menu = true;
                         break;
                 }
+                Console.ReadKey();
             } while (menu);
 
         }
@@ -87,6 +107,7 @@ namespace AutomaticTextClassification
                     Console.WriteLine("invalid option");
                     Console.WriteLine("Returning to Main Menu");
                     Console.ReadKey();
+                    ReloadMenu = true;
                 }
             }
             else
@@ -104,25 +125,28 @@ namespace AutomaticTextClassification
             bool ReloadMenu= true;
             string userInput="";
             int menuOption = 0;
-            if (bayesingNetworks.Count()>0)
+           
+            if (bayesingNetworks.Count() > 0)
             {
                 Console.WriteLine("Please Select an AI to use");
                 foreach (BayesingNetwork bn in bayesingNetworks)
                 {
                     menuOption++;
-                    Console.WriteLine(menuOption+". "+ bn.Name);
+                    Console.WriteLine(menuOption + ". " + bn.Name);
                 }
                 userInput = Console.ReadLine();
-                if (int.TryParse(userInput, out int result))
+                if (int.TryParse(userInput, out int result)&& result <= userInput.Count())
                 {
                     _bn = bayesingNetworks[result - 1];
                     ReloadMenu = false;
                 }
                 else
                 {
+                    Console.Clear();
                     Console.WriteLine("invalid option");
                     Console.WriteLine("Returning to Main Menu");
                     Console.ReadKey();
+                    ReloadMenu = true;
                 }
             }
             else
@@ -131,7 +155,7 @@ namespace AutomaticTextClassification
                 Console.WriteLine("Returning to Main Menu");
                 Console.ReadKey();
             }
-
+            
             return ReloadMenu;
         }
         /// <summary>
@@ -184,15 +208,6 @@ namespace AutomaticTextClassification
                         break;
                 } 
             } while (menu || failedFile);
-        }
-        /// <summary>
-        /// Returns the result of the AI using the test data.
-        /// </summary>
-        /// <param name="goverment"></param>
-        /// <param name="percentageCertainty"></param>
-        public void Result(string goverment, double percentageCertainty)
-        {
-
         }
     }
 }

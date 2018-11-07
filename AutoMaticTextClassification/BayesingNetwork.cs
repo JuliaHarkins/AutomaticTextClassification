@@ -118,12 +118,12 @@ namespace AutomaticTextClassification
                 catResultsTable.Add(cat.Name, r);
                 totalValue += r;
             }
-
-            foreach ( KeyValuePair<string, double> kvp in catResultsTable)
+            var sortedResult = from entry in catResultsTable orderby entry.Value descending select entry;
+            foreach ( KeyValuePair<string, double> kvp in sortedResult)
             {
                 double percent = 0;
-                percent = Math.Log(kvp.Value / totalValue);
-                 string catResult = kvp.Key + " " + Math.Round(percent,3);
+                percent = (kvp.Value / totalValue) *100;
+                string catResult = kvp.Key + " " + Math.Round(percent,2) +"%";
                 finalResult.Add(catResult);
             }
             
