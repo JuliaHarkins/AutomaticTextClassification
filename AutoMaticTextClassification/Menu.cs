@@ -135,7 +135,7 @@ namespace AutomaticTextClassification
                     Console.WriteLine(menuOption + ". " + bn.Name);
                 }
                 userInput = Console.ReadLine();
-                if (int.TryParse(userInput, out int result)&& result <= userInput.Count())
+                if (int.TryParse(userInput, out int result)&& result <= bayesingNetworks.Count())
                 {
                     _bn = bayesingNetworks[result - 1];
                     ReloadMenu = false;

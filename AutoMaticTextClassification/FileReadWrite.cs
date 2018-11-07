@@ -50,7 +50,6 @@ namespace AutomaticTextClassification
 
             return trainingData.ToArray();
         }
-
         /// <summary>
         /// takes the test data for the AI to analyse 
         /// </summary>
@@ -86,6 +85,19 @@ namespace AutomaticTextClassification
                 }
             }
             return lemmatizingWords.ToArray();
+        }
+        public string[] GetSuffixes()
+        {
+            List<string> suffixes = new List<string>();
+            using (StreamReader sr = new StreamReader("suffixes.txt"))
+            {
+                string line = "";
+                while ((line = sr.ReadLine()) != null)
+                {
+                    suffixes.Add(line);
+                }
+            }
+            return suffixes.ToArray();
         }
 
         /// <summary>
@@ -140,7 +152,7 @@ namespace AutomaticTextClassification
                     //file is the networks categories
                     foreach (string file in Directory.EnumerateFiles(d, "*.txt"))
                     {
-                        CategoryObj c = new CategoryObj(GetLemmatizingWords())
+                        CategoryObj c = new CategoryObj(GetLemmatizingWords(), GetSuffixes())
                         {
                             Name = Path.GetFileName(file)
                         };

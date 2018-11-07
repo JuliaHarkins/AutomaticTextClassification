@@ -8,6 +8,7 @@ namespace AutomaticTextClassification
 {
     class CategoryObj
     {
+        string[] _suffixes;
         string[] _lemmatizingWords;
         string _name;
         Dictionary<string, int> _wordInformation;
@@ -16,28 +17,44 @@ namespace AutomaticTextClassification
         public string Name { get { return _name; } set { _name = value; } }
         public Dictionary<string, int> WordInformation { get {return _wordInformation; } set { _wordInformation = value; } }
 
-        public CategoryObj(string[] lemmatizingWords)
+        public CategoryObj(string[] lemmatizingWords, string[] suffixes)
         {
             _documentsUsed = 0;
             _lemmatizingWords = lemmatizingWords;
+            _suffixes = suffixes;
         }
 
         string[] RemoveLemmatizingWords(string text)
         {
-            List<string> revisedText = text.Split().ToArray().ToList() ;
+            List<string> removedLemmatizingWords = text.Split().ToArray().ToList();
+            List<string> revisedText = new List<string>();
             if (_lemmatizingWords != null)
             {
-                int i= revisedText.Count-1;
+                int i= removedLemmatizingWords.Count-1;
                 while (i != -1) {
-                    if (_lemmatizingWords.Contains(revisedText[i].ToLower()))
+                    if (_lemmatizingWords.Contains(removedLemmatizingWords[i].ToLower()))
                     {
-                        revisedText.Remove(revisedText[i]);
+                        removedLemmatizingWords.Remove(removedLemmatizingWords[i]);
                     }
                     else
                     {
                         i--;
                     }
                 }
+            }
+            foreach(string s in removedLemmatizingWords)
+            {
+                string update = s;
+                foreach(string suffix in _suffixes)
+                {
+                    if (s.EndsWith(suffix) && s.Length >suffix.Length)
+                    {
+                        update =s.Remove(s.Length - suffix.Length, suffix.Length);
+                        break;
+                    }
+                }
+                if(update!= "")
+                revisedText.Add(update);
             }
             return revisedText.ToArray();
         }

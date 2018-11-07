@@ -12,10 +12,12 @@ namespace AutomaticTextClassification
         CategoryObj _analisingText;
         public List<CategoryObj> KnownInfomation { get { return _knownInformation; } }
         public string Name { get; set; }
+
         public BayesingNetwork()
         {
 
         }
+
         public BayesingNetwork(List<CategoryObj> knownInformation)
         {
             _knownInformation = knownInformation;
@@ -52,7 +54,7 @@ namespace AutomaticTextClassification
                 }
                 if (!exists)
                 {
-                    CategoryObj newCategory = new CategoryObj(frw.GetLemmatizingWords());
+                    CategoryObj newCategory = new CategoryObj(frw.GetLemmatizingWords(), frw.GetSuffixes());
                     newCategory.Name = category;
                     newCategory.AddText(f.FileContent);
 
@@ -64,7 +66,7 @@ namespace AutomaticTextClassification
         public void GetAnalizedText(FileObj file)
         {
             FileReadWrite frw = new FileReadWrite();
-            CategoryObj analisingText = new CategoryObj(frw.GetLemmatizingWords());
+            CategoryObj analisingText = new CategoryObj(frw.GetLemmatizingWords(), frw.GetSuffixes());
             analisingText.Name = file.FileName;
 
             analisingText.AddText(file.FileContent);
