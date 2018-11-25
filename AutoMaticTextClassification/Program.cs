@@ -11,6 +11,7 @@ namespace AutomaticTextClassification
         static void Main(string[] args)
         {
             Menu m = new Menu();
+            //loads the user menu
             m.StartUp();
         }
     }

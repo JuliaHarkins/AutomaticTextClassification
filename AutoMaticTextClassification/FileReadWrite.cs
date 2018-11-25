@@ -9,7 +9,8 @@ namespace AutomaticTextClassification
 {
     class FileReadWrite
     {
-        string _BayesingNetworkFolder = "BayesingNetwork";
+        //the folder names
+        string _BayesingNetworkFolder = "BayesingNetwork"; 
         string _TestDataFolder = "TestData";
         string _TrainingDataFolder = "TrainingData";
 
@@ -18,6 +19,7 @@ namespace AutomaticTextClassification
         /// </summary>
         public FileReadWrite()
         {
+            //created required folders if they don't exist already
             if (!System.IO.Directory.Exists(_BayesingNetworkFolder))
             {
                 System.IO.Directory.CreateDirectory(_BayesingNetworkFolder);
@@ -33,7 +35,7 @@ namespace AutomaticTextClassification
         }
 
         /// <summary>
-        /// gets all the training to train the AI
+        /// gets all the training to train the networks folder
         /// </summary>
         /// <returns></returns>
         public FileObj[] GetTrainingData()
@@ -51,7 +53,7 @@ namespace AutomaticTextClassification
             return trainingData.ToArray();
         }
         /// <summary>
-        /// takes the test data for the AI to analyse 
+        /// gets the test data for the network to analyse 
         /// </summary>
         /// <returns></returns>
         public FileObj[] GetTestData()
@@ -86,6 +88,11 @@ namespace AutomaticTextClassification
             }
             return lemmatizingWords.ToArray();
         }
+
+        /// <summary>
+        /// Gets the list of suffixes from the debug file
+        /// </summary>
+        /// <returns>the list of suffixes</returns>
         public string[] GetSuffixes()
         {
             List<string> suffixes = new List<string>();
@@ -191,6 +198,11 @@ namespace AutomaticTextClassification
             return bayesingNetworks.ToArray();
         }
 
+        /// <summary>
+        /// removes punctuation from a string
+        /// </summary>
+        /// <param name="s">the information in the file</param>
+        /// <returns>the files informaiton without any punctuation </returns>
         string RemovePunctuation(string s)
         {
             StringBuilder sb = new StringBuilder();

@@ -18,6 +18,7 @@ namespace AutomaticTextClassification
             string menuOption;
             bool menu = false;
             
+            //Ensures the users keeps returning to the menu until they wish to quit.
             do
             {
                 Console.Clear();
@@ -29,10 +30,11 @@ namespace AutomaticTextClassification
                 switch (menuOption)
                 {
                     case "1":
+                        //creates a new network
                         _bn = new BayesingNetwork();
                         try
                         {
-                            _bn.Train();
+                            _bn.Train(); 
                         }
                         catch (Exception)
                         {
@@ -42,6 +44,7 @@ namespace AutomaticTextClassification
                         menu = true;
                         break;
                     case "2":
+                        //gets an already existing network
                         menu = ChooseABaysingNetwork(frw.GetSavedBayesingNetworks());
                         if (!menu)
                         {
@@ -49,10 +52,12 @@ namespace AutomaticTextClassification
                         }
                         if (_bn != null)
                         {
+                            //gets the result of analising the text
                             string[] result = _bn.GetAnalisedResult().ToArray();
 
                             if (result.Count() != 0)
                             {
+                                //displays the result to the user
                                 Console.WriteLine("The results of the analised text are");
                                 int i = 1;
                                 foreach (string s in result)
@@ -68,6 +73,7 @@ namespace AutomaticTextClassification
                         }
                         break;
                     case "q":
+                        //allows the user to escape the program
                         Console.Clear();
                         Console.WriteLine("Exiting Program");
                         menu = false;
@@ -79,17 +85,20 @@ namespace AutomaticTextClassification
                 }
                 Console.ReadKey();
             } while (menu);
-
         }
-        bool SelectText()
+        /// <summary>
+        /// Gets the text the user wishes to analise
+        /// </summary>
+        void SelectText()
         {
             Console.Clear();
             FileObj[] testData = frw.GetTestData();
-            bool ReloadMenu = true;
             string userInput = "";
             int menuOption = 0;
+            //checks if there is any test data and displays it
             if (testData.Count() > 0)
             {
+                //takes the users choice
                 Console.WriteLine("Please Select an Test document to use");
                 foreach (FileObj f in testData)
                 {
@@ -97,37 +106,42 @@ namespace AutomaticTextClassification
                     Console.WriteLine(menuOption + ". " + f.FileName);
                 }
                 userInput = Console.ReadLine();
+                //checks if the user input is valid and analizes it if it is
                 if (int.TryParse(userInput, out int result))
                 {
                     _bn.GetAnalizedText( testData[result - 1]);
-                    ReloadMenu = false;
                 }
                 else
                 {
                     Console.WriteLine("invalid option");
                     Console.WriteLine("Returning to Main Menu");
                     Console.ReadKey();
-                    ReloadMenu = true;
-                }
+                }            
             }
+            // teslls the user there is no test data
             else
             {
                 Console.WriteLine("there are no tests documents avalible");
                 Console.WriteLine("Returning to Main Menu");
                 Console.ReadKey();
             }
-
-            return ReloadMenu;
         }
+        /// <summary>
+        /// displays a list of posible networks for the user to choose from
+        /// </summary>
+        /// <param name="bayesingNetworks">A list of avalible networks</param>
+        /// <returns>whether the menu needs to be reloaded</returns>
         bool ChooseABaysingNetwork(BayesingNetwork[] bayesingNetworks)
         {
             Console.Clear();
-            bool ReloadMenu= true;
-            string userInput="";
-            int menuOption = 0;
-           
+            bool ReloadMenu= true; //used to determine if the network needs reloaded
+            string userInput=""; //basic userinput
+            int menuOption = 0; //keeps track of the amount of options
+
+           //checks if it can display any networks
             if (bayesingNetworks.Count() > 0)
             {
+                //lists all the avalible networks
                 Console.WriteLine("Please Select an AI to use");
                 foreach (BayesingNetwork bn in bayesingNetworks)
                 {
@@ -135,6 +149,7 @@ namespace AutomaticTextClassification
                     Console.WriteLine(menuOption + ". " + bn.Name);
                 }
                 userInput = Console.ReadLine();
+                //checks if the user selected a valid network
                 if (int.TryParse(userInput, out int result)&& result <= bayesingNetworks.Count())
                 {
                     _bn = bayesingNetworks[result - 1];
@@ -146,7 +161,6 @@ namespace AutomaticTextClassification
                     Console.WriteLine("invalid option");
                     Console.WriteLine("Returning to Main Menu");
                     Console.ReadKey();
-                    ReloadMenu = true;
                 }
             }
             else
@@ -155,7 +169,6 @@ namespace AutomaticTextClassification
                 Console.WriteLine("Returning to Main Menu");
                 Console.ReadKey();
             }
-            
             return ReloadMenu;
         }
         /// <summary>
@@ -163,15 +176,16 @@ namespace AutomaticTextClassification
         /// </summary>
         public void SaveBayesingNetwork()
         {
-            bool menu = false;  //checks if the menu 
-            bool failedFile = false;
             
+            bool menu = false; //determins whether the mune needds reloaded
+            bool fileAlreadyExists = false; //used to determine if the file can be created under the users input
+
             do {
                 Console.Clear();
                 string userInput = "";
-                if (failedFile)
+                if (fileAlreadyExists)
                 {
-                    
+                    //informs the user the name is taken, asks them if they wish to rename
                     Console.WriteLine("A folder with that name already exists, unable to save network under that name");
                     Console.WriteLine("Would you like to save the AI under a different name?(y/n)");
                     userInput = Console.ReadLine();
@@ -183,31 +197,32 @@ namespace AutomaticTextClassification
                     userInput = Console.ReadLine();
                 }
                 Console.Clear();
-                failedFile = false;
+                fileAlreadyExists = false;
                 menu = false;
-                switch (userInput)
+                switch (userInput.ToLower())
                 {
                     case "y":
                         do
                         {
+                            //asks the user to name the file
                             Console.WriteLine("What do you wish to save the folder as?");
                             userInput = Console.ReadLine();
                         } while (userInput == "");
                         _bn.Name = userInput;
-                        failedFile = frw.SaveBayesingToFile(userInput, _bn.KnownInfomation);
+                        //checks if the file exists
+                        fileAlreadyExists = frw.SaveBayesingToFile(userInput, _bn.KnownInfomation);
                         break;
-
                     case "n":
+                        //checks if the user is sure they don't wish to save the new file
                         Console.WriteLine("Are you sure you wish to leave without saving? (y/n)");
                         userInput = Console.ReadLine();
                         menu = (userInput == "y") ? false : true; 
                         break;
-
                     default:
                         menu = true;
                         break;
                 } 
-            } while (menu || failedFile);
+            } while (menu || fileAlreadyExists);
         }
     }
 }
