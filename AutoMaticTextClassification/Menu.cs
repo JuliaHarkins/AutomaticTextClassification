@@ -9,6 +9,10 @@ namespace AutomaticTextClassification
     class Menu
     {
         BayesingNetwork _bn;
+        FileReadWrite frw = new FileReadWrite();
+        /// <summary>
+        /// Loads the users main menu
+        /// </summary>
         public void StartUp()
         {
             string menuOption;
@@ -26,40 +30,161 @@ namespace AutomaticTextClassification
                 {
                     case "1":
                         _bn = new BayesingNetwork();
-                        _bn.Train();
+                        try
+                        {
+                            _bn.Train();
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("File error, unable to read trining data");
+                        }
+                        SaveBayesingNetwork();
+                        menu = true;
                         break;
                     case "2":
+                        menu = ChooseABaysingNetwork(frw.GetSavedBayesingNetworks());
+                        if (!menu)
+                        {
+                            SelectText();
+                        }
+                        if (_bn != null)
+                        {
+                            string[] result = _bn.GetAnalisedResult().ToArray();
 
+                            if (result.Count() != 0)
+                            {
+                                Console.WriteLine("The results of the analised text are");
+                                int i = 1;
+                                foreach (string s in result)
+                                {
+                                    Console.WriteLine(i + ". " + s);
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("No results avalible.");
+                            }
+                        }
                         break;
                     case "q":
+                        Console.Clear();
+                        Console.WriteLine("Exiting Program");
+                        menu = false;
                         break;
 
                     default:
                         menu = true;
                         break;
                 }
+                Console.ReadKey();
             } while (menu);
 
         }
-
-        public void SaveBayesingNetwork()
+        bool SelectText()
         {
-            bool menu = false;
-            bool failedFile = false;
-            string userInput = "";
             Console.Clear();
-            Console.WriteLine("AI is Trained");
-            Console.WriteLine("Would you like to save the AI (y/n)");
-            userInput = Console.ReadLine();
-            FileReadWrite frw = new FileReadWrite();
-            do {
-                if (failedFile)
+            FileObj[] testData = frw.GetTestData();
+            bool ReloadMenu = true;
+            string userInput = "";
+            int menuOption = 0;
+            if (testData.Count() > 0)
+            {
+                Console.WriteLine("Please Select an Test document to use");
+                foreach (FileObj f in testData)
+                {
+                    menuOption++;
+                    Console.WriteLine(menuOption + ". " + f.FileName);
+                }
+                userInput = Console.ReadLine();
+                if (int.TryParse(userInput, out int result))
+                {
+                    _bn.GetAnalizedText( testData[result - 1]);
+                    ReloadMenu = false;
+                }
+                else
+                {
+                    Console.WriteLine("invalid option");
+                    Console.WriteLine("Returning to Main Menu");
+                    Console.ReadKey();
+                    ReloadMenu = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("there are no tests documents avalible");
+                Console.WriteLine("Returning to Main Menu");
+                Console.ReadKey();
+            }
+
+            return ReloadMenu;
+        }
+        bool ChooseABaysingNetwork(BayesingNetwork[] bayesingNetworks)
+        {
+            Console.Clear();
+            bool ReloadMenu= true;
+            string userInput="";
+            int menuOption = 0;
+           
+            if (bayesingNetworks.Count() > 0)
+            {
+                Console.WriteLine("Please Select an AI to use");
+                foreach (BayesingNetwork bn in bayesingNetworks)
+                {
+                    menuOption++;
+                    Console.WriteLine(menuOption + ". " + bn.Name);
+                }
+                userInput = Console.ReadLine();
+                if (int.TryParse(userInput, out int result)&& result <= bayesingNetworks.Count())
+                {
+                    _bn = bayesingNetworks[result - 1];
+                    ReloadMenu = false;
+                }
+                else
                 {
                     Console.Clear();
+                    Console.WriteLine("invalid option");
+                    Console.WriteLine("Returning to Main Menu");
+                    Console.ReadKey();
+                    ReloadMenu = true;
+                }
+            }
+            else
+            {
+                Console.WriteLine("there are no trained AI avalible");
+                Console.WriteLine("Returning to Main Menu");
+                Console.ReadKey();
+            }
+            
+            return ReloadMenu;
+        }
+        /// <summary>
+        /// asks the user if they wish to save their AI
+        /// </summary>
+        public void SaveBayesingNetwork()
+        {
+            bool menu = false;  //checks if the menu 
+            bool failedFile = false;
+            
+            do {
+                Console.Clear();
+                string userInput = "";
+                if (failedFile)
+                {
+                    
                     Console.WriteLine("A folder with that name already exists, unable to save network under that name");
                     Console.WriteLine("Would you like to save the AI under a different name?(y/n)");
                     userInput = Console.ReadLine();
                 }
+                else
+                {
+                    Console.WriteLine("AI is Trained");
+                    Console.WriteLine("Would you like to save the AI (y/n)");
+                    userInput = Console.ReadLine();
+                }
+                Console.Clear();
+                failedFile = false;
+                menu = false;
                 switch (userInput)
                 {
                     case "y":
@@ -67,11 +192,15 @@ namespace AutomaticTextClassification
                         {
                             Console.WriteLine("What do you wish to save the folder as?");
                             userInput = Console.ReadLine();
-                        } while (userInput != "");
+                        } while (userInput == "");
+                        _bn.Name = userInput;
                         failedFile = frw.SaveBayesingToFile(userInput, _bn.KnownInfomation);
                         break;
 
                     case "n":
+                        Console.WriteLine("Are you sure you wish to leave without saving? (y/n)");
+                        userInput = Console.ReadLine();
+                        menu = (userInput == "y") ? false : true; 
                         break;
 
                     default:
@@ -79,12 +208,6 @@ namespace AutomaticTextClassification
                         break;
                 } 
             } while (menu || failedFile);
-        }
-
-
-        public void Result(string goverment, double percentageCertainty)
-        {
-
         }
     }
 }
