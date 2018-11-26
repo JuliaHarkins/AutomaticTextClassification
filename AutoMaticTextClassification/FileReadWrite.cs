@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AutomaticTextClassification
 {
@@ -20,24 +18,24 @@ namespace AutomaticTextClassification
         public FileReadWrite()
         {
             //created required folders if they don't exist already
-            if (!System.IO.Directory.Exists(_BayesingNetworkFolder))
+            if (!Directory.Exists(_BayesingNetworkFolder))
             {
-                System.IO.Directory.CreateDirectory(_BayesingNetworkFolder);
+                Directory.CreateDirectory(_BayesingNetworkFolder);
             }
-            if (!System.IO.Directory.Exists(_TestDataFolder))
+            if (!Directory.Exists(_TestDataFolder))
             {
-                System.IO.Directory.CreateDirectory(_TestDataFolder);
+                Directory.CreateDirectory(_TestDataFolder);
             }
-            if (!System.IO.Directory.Exists(_TrainingDataFolder))
+            if (!Directory.Exists(_TrainingDataFolder))
             {
-                System.IO.Directory.CreateDirectory(_TrainingDataFolder);
+                Directory.CreateDirectory(_TrainingDataFolder);
             }
         }
 
         /// <summary>
         /// gets all the training to train the networks folder
         /// </summary>
-        /// <returns></returns>
+        /// <returns>returns the training data</returns>
         public FileObj[] GetTrainingData()
         {
             List<FileObj> trainingData = new List<FileObj>();
@@ -55,7 +53,7 @@ namespace AutomaticTextClassification
         /// <summary>
         /// gets the test data for the network to analyse 
         /// </summary>
-        /// <returns></returns>
+        /// <returns>returns the test data</returns>
         public FileObj[] GetTestData()
         {
             List<FileObj> testData = new List<FileObj>();
@@ -74,7 +72,7 @@ namespace AutomaticTextClassification
         /// <summary>
         /// takes the lemmatizing words from the debug folder
         /// </summary>
-        /// <returns></returns>
+        /// <returns>returns the array of lemmatizingWords</returns>
         public string[] GetLemmatizingWords()
         {
             List<string> lemmatizingWords = new List<string>();
@@ -92,7 +90,7 @@ namespace AutomaticTextClassification
         /// <summary>
         /// Gets the list of suffixes from the debug file
         /// </summary>
-        /// <returns>the list of suffixes</returns>
+        /// <returns>the array of suffixes</returns>
         public string[] GetSuffixes()
         {
             List<string> suffixes = new List<string>();
@@ -112,29 +110,29 @@ namespace AutomaticTextClassification
         /// </summary>
         /// <param name="folderName"></param>
         /// <param name="bayesingNetwork"></param>
-        /// <returns></returns>
+        /// <returns>returns a true or a false based on the success of the method</returns>
         public bool SaveBayesingToFile(string folderName, List<CategoryObj> bayesingNetwork)
         {
             bool fileFailed = true;
             string folderPath = _BayesingNetworkFolder + "\\" + folderName;
             //find out if the folder already exists
-            if (!System.IO.Directory.Exists(folderPath))
+            if (!Directory.Exists(folderPath))
             {
-                System.IO.Directory.CreateDirectory(folderPath);
+                Directory.CreateDirectory(folderPath);
                 //create a file for each category known to the network
                 foreach (CategoryObj cat in bayesingNetwork)
                 {
                     string filePath = folderPath+"\\" + cat.Name + ".txt";
                     
-                    List<string> infomation = new List<string>();
+                    List<string> information = new List<string>();
                     
-                    infomation.Add(cat.DocumentsUsed.ToString());
+                    information.Add(cat.DocumentsUsed.ToString());
 
                     foreach (KeyValuePair<string, int> kvp in cat.WordInformation)
                     {
-                        infomation.Add(kvp.Key + "+" + kvp.Value);
+                        information.Add(kvp.Key + "+" + kvp.Value);
                     }
-                    File.WriteAllLines(filePath, infomation);
+                    File.WriteAllLines(filePath, information);
                 }
                 fileFailed = false;
             }
@@ -143,7 +141,7 @@ namespace AutomaticTextClassification
         /// <summary>
         /// retrieves the networks from the folder.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>returns the bayesingNetwork array</returns>
         public BayesingNetwork[] GetSavedBayesingNetworks()
         {            
             //list of networks
@@ -193,7 +191,7 @@ namespace AutomaticTextClassification
             }
             catch (Exception)
             {
-                Console.WriteLine("File erroe, please check the files are input corretly");
+                Console.WriteLine("File error, please check the files are input correctly");
             }
             return bayesingNetworks.ToArray();
         }
@@ -202,11 +200,11 @@ namespace AutomaticTextClassification
         /// removes punctuation from a string
         /// </summary>
         /// <param name="s">the information in the file</param>
-        /// <returns>the files informaiton without any punctuation </returns>
+        /// <returns>the files information without any punctuation </returns>
         string RemovePunctuation(string s)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (Char c in s)
+            foreach (char c in s)
             {
                 if (!char.IsPunctuation(c))
                     sb.Append(c);

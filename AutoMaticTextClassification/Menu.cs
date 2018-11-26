@@ -38,7 +38,7 @@ namespace AutomaticTextClassification
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine("File error, unable to read trining data");
+                            Console.WriteLine("File error, unable to read training data");
                         }
                         SaveBayesingNetwork();
                         menu = true;
@@ -52,13 +52,13 @@ namespace AutomaticTextClassification
                         }
                         if (_bn != null)
                         {
-                            //gets the result of analising the text
-                            string[] result = _bn.GetAnalisedResult().ToArray();
+                            //gets the result of the analysed text
+                            string[] result = _bn.GetAnalysedResult().ToArray();
 
                             if (result.Count() != 0)
                             {
                                 //displays the result to the user
-                                Console.WriteLine("The results of the analised text are");
+                                Console.WriteLine("The results of the analysed text are");
                                 int i = 1;
                                 foreach (string s in result)
                                 {
@@ -113,15 +113,15 @@ namespace AutomaticTextClassification
                 }
                 else
                 {
-                    Console.WriteLine("invalid option");
+                    Console.WriteLine("Invalid option");
                     Console.WriteLine("Returning to Main Menu");
                     Console.ReadKey();
                 }            
             }
-            // teslls the user there is no test data
+            // tells the user there is no test data
             else
             {
-                Console.WriteLine("there are no tests documents avalible");
+                Console.WriteLine("There are no test documents available");
                 Console.WriteLine("Returning to Main Menu");
                 Console.ReadKey();
             }
@@ -134,15 +134,15 @@ namespace AutomaticTextClassification
         bool ChooseABaysingNetwork(BayesingNetwork[] bayesingNetworks)
         {
             Console.Clear();
-            bool ReloadMenu= true; //used to determine if the network needs reloaded
+            bool reloadMenu= true; //used to determine if the network needs reloaded
             string userInput=""; //basic userinput
             int menuOption = 0; //keeps track of the amount of options
 
            //checks if it can display any networks
             if (bayesingNetworks.Count() > 0)
             {
-                //lists all the avalible networks
-                Console.WriteLine("Please Select an AI to use");
+                //lists all the available networks
+                Console.WriteLine("Please select an AI to use");
                 foreach (BayesingNetwork bn in bayesingNetworks)
                 {
                     menuOption++;
@@ -153,23 +153,23 @@ namespace AutomaticTextClassification
                 if (int.TryParse(userInput, out int result)&& result <= bayesingNetworks.Count())
                 {
                     _bn = bayesingNetworks[result - 1];
-                    ReloadMenu = false;
+                    reloadMenu = false;
                 }
                 else
                 {
                     Console.Clear();
-                    Console.WriteLine("invalid option");
+                    Console.WriteLine("Invalid option");
                     Console.WriteLine("Returning to Main Menu");
                     Console.ReadKey();
                 }
             }
             else
             {
-                Console.WriteLine("there are no trained AI avalible");
+                Console.WriteLine("There are no trained AI available");
                 Console.WriteLine("Returning to Main Menu");
                 Console.ReadKey();
             }
-            return ReloadMenu;
+            return reloadMenu;
         }
         /// <summary>
         /// asks the user if they wish to save their AI

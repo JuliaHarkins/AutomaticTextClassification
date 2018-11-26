@@ -9,11 +9,11 @@ namespace AutomaticTextClassification
     class BayesingNetwork
     {
         List<CategoryObj> _knownInformation;
-        CategoryObj _analisingText;
+        CategoryObj _analysingText;
         public List<CategoryObj> KnownInfomation { get { return _knownInformation; } }
         public string Name { get; set; }
 
-        public BayesingNetwork(){        }
+        public BayesingNetwork(){}
 
         public BayesingNetwork(List<CategoryObj> knownInformation)
         {
@@ -27,7 +27,7 @@ namespace AutomaticTextClassification
         {
             FileReadWrite frw = new FileReadWrite();
 
-            //get the trianing files
+            //get the training files
             FileObj[] files = frw.GetTrainingData();
             List<CategoryObj> categories = new List<CategoryObj>();
             bool exists = false;
@@ -36,7 +36,7 @@ namespace AutomaticTextClassification
             {
                 string category = ""; //name of the new category
 
-                //creates the categoryname
+                //creates the category name
                 foreach(char c in f.FileName)
                     if (c != '0' && c != '1' && c != '2' && c != '3' && c != '4' && c != '5' && c != '6' && c != '7' && c != '8' && c != '9' && c != '.') {
                         category += c;
@@ -69,22 +69,22 @@ namespace AutomaticTextClassification
             _knownInformation = categories;
         }
         /// <summary>
-        /// Gets the information the user wishes to analize and preperes it for the network to analize
+        /// Gets the information the user wishes to analyse and prepares it for the network to analyse
         /// </summary>
-        /// <param name="file">the file the user wishes to analize</param>
+        /// <param name="file">the file the user wishes to analyse</param>
         public void GetAnalizedText(FileObj file)
         {
             FileReadWrite frw = new FileReadWrite();
-            CategoryObj analisingText = new CategoryObj(frw.GetLemmatizingWords(), frw.GetSuffixes());
-            analisingText.Name = file.FileName;
-            analisingText.AddText(file.FileContent);
-            _analisingText = analisingText;
+            CategoryObj analysingText = new CategoryObj(frw.GetLemmatizingWords(), frw.GetSuffixes());
+            analysingText.Name = file.FileName;
+            analysingText.AddText(file.FileContent);
+            _analysingText = analysingText;
         }
         /// <summary>
-        /// Analizes the Text
+        /// analyse the Text
         /// </summary>
-        /// <returns>Returns the percentage chance for each category analised</returns>
-        public List<string> GetAnalisedResult()
+        /// <returns>Returns the percentage chance for each category analysed</returns>
+        public List<string> GetAnalysedResult()
         {
             double totalValue=0; //the value of all results added together
             int totalWords = 0;   //the total words in all the documents      
@@ -105,7 +105,7 @@ namespace AutomaticTextClassification
                 foreach (KeyValuePair<string, int> kvp in cat.WordInformation)
                 {
 
-                    if (_analisingText.WordInformation.ContainsKey(kvp.Key))
+                    if (_analysingText.WordInformation.ContainsKey(kvp.Key))
                     {
                         //sets the first value
                         if (chance == 0)
@@ -122,6 +122,7 @@ namespace AutomaticTextClassification
                         }
                     }
                 }
+                //calculates the final result.
                 if (chance != 0 && totalCatDoc !=0)
                 {
                     chance += Math.Log((double)cat.DocumentsUsed / totalCatDoc);
@@ -131,7 +132,9 @@ namespace AutomaticTextClassification
                 catResultsTable.Add(cat.Name, r);
                 totalValue += r;
             }
+            //sorting the list to get the highest value at the top.
             var sortedResult = from entry in catResultsTable orderby entry.Value descending select entry;
+            //gets the percentage of each of the categories
             foreach ( KeyValuePair<string, double> kvp in sortedResult)
             {
                 double percent = 0;
@@ -141,7 +144,7 @@ namespace AutomaticTextClassification
             }
             
 
-
+            //returns a list of the results.
             return finalResult;
         }
     }
