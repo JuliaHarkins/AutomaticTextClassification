@@ -54,7 +54,7 @@ namespace AutomaticTextClassification
                         {
                             //gets the result of the analysed text
                             string[] result = _bn.GetAnalysedResult().ToArray();
-
+                            Console.Clear();
                             if (result.Count() != 0)
                             {
                                 //displays the result to the user
