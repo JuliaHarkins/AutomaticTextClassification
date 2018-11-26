@@ -10,6 +10,7 @@ namespace AutomaticTextClassification
     {
         List<CategoryObj> _knownInformation;
         CategoryObj _analysingText;
+
         public List<CategoryObj> KnownInfomation { get { return _knownInformation; } }
         public string Name { get; set; }
 
@@ -72,7 +73,7 @@ namespace AutomaticTextClassification
         /// Gets the information the user wishes to analyse and prepares it for the network to analyse
         /// </summary>
         /// <param name="file">the file the user wishes to analyse</param>
-        public void GetAnalizedText(FileObj file)
+        public void GetAnalysedText(FileObj file)
         {
             FileReadWrite frw = new FileReadWrite();
             CategoryObj analysingText = new CategoryObj(frw.GetLemmatizingWords(), frw.GetSuffixes());

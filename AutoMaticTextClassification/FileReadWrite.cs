@@ -146,7 +146,7 @@ namespace AutomaticTextClassification
         {            
             //list of networks
             List<BayesingNetwork> bayesingNetworks = new List<BayesingNetwork>();
-
+            
             try
             {
                 //d is the directory which holds the networks infomation
