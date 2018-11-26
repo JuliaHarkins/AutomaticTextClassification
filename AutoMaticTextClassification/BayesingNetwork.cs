@@ -13,16 +13,16 @@ namespace AutomaticTextClassification
         public List<CategoryObj> KnownInfomation { get { return _knownInformation; } }
         public string Name { get; set; }
 
-        public BayesingNetwork()
-        {
-
-        }
+        public BayesingNetwork(){        }
 
         public BayesingNetwork(List<CategoryObj> knownInformation)
         {
             _knownInformation = knownInformation;
         }
 
+        /// <summary>
+        /// Trains the network
+        /// </summary>
         public void Train()
         {
             FileReadWrite frw = new FileReadWrite();
@@ -34,7 +34,9 @@ namespace AutomaticTextClassification
             //classifies the categories using the files
             foreach(FileObj f in files)
             {
-                string category = "";
+                string category = ""; //name of the new category
+
+                //creates the categoryname
                 foreach(char c in f.FileName)
                     if (c != '0' && c != '1' && c != '2' && c != '3' && c != '4' && c != '5' && c != '6' && c != '7' && c != '8' && c != '9' && c != '.') {
                         category += c;
@@ -44,6 +46,7 @@ namespace AutomaticTextClassification
                         break;
                     }
                 exists = false;
+                //checks if information can be added to an existing category
                 foreach(CategoryObj cat in categories)
                 {
                     if(cat.Name == category)
@@ -52,6 +55,7 @@ namespace AutomaticTextClassification
                         cat.AddText( f.FileContent);
                     }
                 }
+                //makes a new category if the category doesn't already exist
                 if (!exists)
                 {
                     CategoryObj newCategory = new CategoryObj(frw.GetLemmatizingWords(), frw.GetSuffixes());
@@ -61,18 +65,25 @@ namespace AutomaticTextClassification
                     categories.Add(newCategory);
                 }
             }
+            //adds the list of categorys tot he known information
             _knownInformation = categories;
         }
+        /// <summary>
+        /// Gets the information the user wishes to analize and preperes it for the network to analize
+        /// </summary>
+        /// <param name="file">the file the user wishes to analize</param>
         public void GetAnalizedText(FileObj file)
         {
             FileReadWrite frw = new FileReadWrite();
             CategoryObj analisingText = new CategoryObj(frw.GetLemmatizingWords(), frw.GetSuffixes());
             analisingText.Name = file.FileName;
-
             analisingText.AddText(file.FileContent);
             _analisingText = analisingText;
         }
-
+        /// <summary>
+        /// Analizes the Text
+        /// </summary>
+        /// <returns>Returns the percentage chance for each category analised</returns>
         public List<string> GetAnalisedResult()
         {
             double totalValue=0; //the value of all results added together
