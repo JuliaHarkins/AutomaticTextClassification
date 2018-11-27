@@ -53,7 +53,7 @@ namespace AutomaticTextClassification
                         {
                             //gets the result of the analysed text
                             string[] result = _bn.GetAnalysedResult().ToArray();
-
+                            Console.Clear();
                             if (result.Count() != 0)
                             {
                                 Console.Clear();
@@ -108,7 +108,7 @@ namespace AutomaticTextClassification
                 //checks if the user input is valid and analizes it if it is
                 if (int.TryParse(userInput, out int result))
                 {
-                    _bn.GetAnalizedText( testData[result - 1]);
+                    _bn.GetAnalysedText( testData[result - 1]);
                 }
                 else
                 {
@@ -173,7 +173,7 @@ namespace AutomaticTextClassification
         /// <summary>
         /// asks the user if they wish to save their AI
         /// </summary>
-        public void SaveBayesingNetwork()
+        void SaveBayesingNetwork()
         {
             
             bool menu = false; //determins whether the mune needds reloaded

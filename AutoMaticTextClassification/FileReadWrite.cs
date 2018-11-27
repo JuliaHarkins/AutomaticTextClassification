@@ -76,7 +76,7 @@ namespace AutomaticTextClassification
         public string[] GetLemmatizingWords()
         {
             List<string> lemmatizingWords = new List<string>();
-            using (StreamReader sr = new StreamReader("LemmatizingWords.txt"))
+            using (StreamReader sr = new StreamReader("lemmatizingWords.txt"))
             {
                 string line = "";
                 while ((line = sr.ReadLine()) != null)
@@ -146,7 +146,7 @@ namespace AutomaticTextClassification
         {            
             //list of networks
             List<BayesingNetwork> bayesingNetworks = new List<BayesingNetwork>();
-
+            
             try
             {
                 //d is the directory which holds the networks infomation
