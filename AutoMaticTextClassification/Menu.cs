@@ -56,6 +56,7 @@ namespace AutomaticTextClassification
 
                             if (result.Count() != 0)
                             {
+                                Console.Clear();
                                 //displays the result to the user
                                 Console.WriteLine("The results of the analysed text are");
                                 int i = 1;
@@ -77,7 +78,6 @@ namespace AutomaticTextClassification
                         Console.WriteLine("Exiting Program");
                         menu = false;
                         break;
-
                     default:
                         Console.WriteLine("Invalid Option");
                         break;
