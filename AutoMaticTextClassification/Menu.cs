@@ -16,7 +16,7 @@ namespace AutomaticTextClassification
         public void StartUp()
         {
             string menuOption;
-            bool menu = false;
+            bool menu = true;
             
             //Ensures the users keeps returning to the menu until they wish to quit.
             do
@@ -41,7 +41,6 @@ namespace AutomaticTextClassification
                             Console.WriteLine("File error, unable to read training data");
                         }
                         SaveBayesingNetwork();
-                        menu = true;
                         break;
                     case "2":
                         //gets an already existing network
@@ -80,7 +79,7 @@ namespace AutomaticTextClassification
                         break;
 
                     default:
-                        menu = true;
+                        Console.WriteLine("Invalid Option");
                         break;
                 }
                 Console.ReadKey();
