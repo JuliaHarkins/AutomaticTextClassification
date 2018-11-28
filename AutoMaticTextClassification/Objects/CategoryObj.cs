@@ -9,7 +9,7 @@ namespace AutomaticTextClassification
     class CategoryObj
     {
         string[] _suffixes;
-        string[] _lemmatizingWords;
+        string[] _stopWords;
         string _name;
         Dictionary<string, int> _wordInformation;
         int _documentsUsed;
@@ -29,32 +29,32 @@ namespace AutomaticTextClassification
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="lemmatizingWords">the array of lemmatizingWords</param>
+        /// <param name="stopWords">the array of stopWords</param>
         /// <param name="suffixes">the array of suffixes</param>
-        public CategoryObj(string[] lemmatizingWords, string[] suffixes)
+        public CategoryObj(string[] stopWords, string[] suffixes)
         {
             _documentsUsed = 0;
-            _lemmatizingWords = lemmatizingWords;
+            _stopWords = stopWords;
             _suffixes = suffixes;
         }
 
         /// <summary>
-        /// removes all of the lemmatization matches from the category text.
+        /// removes all of the stop words matches from the category text.
         /// </summary>
-        /// <param name="text">the text which prior to the removal of lemmatizing words</param>
-        /// <returns>the text without lemmatizing words</returns>
-        string[] RemoveLemmatizingWords(string text)
+        /// <param name="text">the text which prior to the removal of strop words</param>
+        /// <returns>the text without stop words</returns>
+        string[] RemoveStopWords(string text)
         {
-            List<string> removedLemmatizingWords = text.Split().ToArray().ToList();
+            List<string> removedStopgWords = text.Split().ToArray().ToList();
             List<string> revisedText = new List<string>();
-            if (_lemmatizingWords != null)
+            if (_stopWords != null)
             {
-                int i= removedLemmatizingWords.Count-1;
+                int i= removedStopgWords.Count-1;
                 //checks if the word needs removed
                 while (i != -1) {
-                    if (_lemmatizingWords.Contains(removedLemmatizingWords[i].ToLower()))
+                    if (_stopWords.Contains(removedStopgWords[i].ToLower()))
                     {
-                        removedLemmatizingWords.Remove(removedLemmatizingWords[i]);
+                        removedStopgWords.Remove(removedStopgWords[i]);
                     }
                     else
                     {
@@ -63,7 +63,7 @@ namespace AutomaticTextClassification
                 }
             }
             //removes suffixes from the words
-            foreach(string s in removedLemmatizingWords)
+            foreach(string s in removedStopgWords)
             {
                 string update = s;
                 foreach(string suffix in _suffixes)
@@ -88,7 +88,7 @@ namespace AutomaticTextClassification
         public void AddText(string text)
         {
             _documentsUsed++;
-            String[] revisedText = RemoveLemmatizingWords(text);
+            String[] revisedText = RemoveStopWords(text);
             //checks if there are any words in the category
             if(_wordInformation == null)
             {

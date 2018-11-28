@@ -26,8 +26,8 @@ namespace AutomaticTextClassification
                 Console.WriteLine("Select an Option");
                 Console.WriteLine("1. Train");
                 Console.WriteLine("2. Classify text ");
-                Console.WriteLine("q to quit");
-                menuOption = Console.ReadLine();
+                Console.WriteLine("Q to quit");
+                menuOption = Console.ReadLine().ToLower();
                 switch (menuOption)
                 {
                     case "1":
@@ -76,6 +76,7 @@ namespace AutomaticTextClassification
                                 }
                             }
                         }
+                        Console.ReadKey();
                         menu = true;
                         break;
                     case "q":
@@ -91,7 +92,7 @@ namespace AutomaticTextClassification
                         menu = true;
                         break;
                 }
-                Console.ReadKey();
+                //Console.ReadKey();
             } while (menu);
         }
         /// <summary>

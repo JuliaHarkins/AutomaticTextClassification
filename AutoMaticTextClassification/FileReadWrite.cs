@@ -70,21 +70,21 @@ namespace AutomaticTextClassification
 
         
         /// <summary>
-        /// takes the lemmatizing words from the debug folder
+        /// takes the stop words from the debug folder
         /// </summary>
-        /// <returns>returns the array of lemmatizingWords</returns>
+        /// <returns>returns the array of stop words</returns>
         public string[] GetStopWords()
         {
-            List<string> lemmatizingWords = new List<string>();
+            List<string> stopWords = new List<string>();
             using (StreamReader sr = new StreamReader("stopWords.txt"))
             {
                 string line = "";
                 while ((line = sr.ReadLine()) != null)
                 {
-                    lemmatizingWords.Add(line);
+                    stopWords.Add(line);
                 }
             }
-            return lemmatizingWords.ToArray();
+            return stopWords.ToArray();
         }
 
         /// <summary>
