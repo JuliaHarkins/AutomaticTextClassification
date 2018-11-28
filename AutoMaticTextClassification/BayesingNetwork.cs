@@ -46,7 +46,7 @@ namespace AutomaticTextClassification
                     {
                         break;
                     }
-                exists = false;
+                 exists = false;
                 //checks if information can be added to an existing category
                 foreach(CategoryObj cat in categories)
                 {
@@ -59,7 +59,7 @@ namespace AutomaticTextClassification
                 //makes a new category if the category doesn't already exist
                 if (!exists)
                 {
-                    CategoryObj newCategory = new CategoryObj(frw.GetLemmatizingWords(), frw.GetSuffixes());
+                    CategoryObj newCategory = new CategoryObj(frw.GetStopWords(), frw.GetSuffixes());
                     newCategory.Name = category;
                     newCategory.AddText(f.FileContent);
 
@@ -76,7 +76,7 @@ namespace AutomaticTextClassification
         public void GetAnalysedText(FileObj file)
         {
             FileReadWrite frw = new FileReadWrite();
-            CategoryObj analysingText = new CategoryObj(frw.GetLemmatizingWords(), frw.GetSuffixes());
+            CategoryObj analysingText = new CategoryObj(frw.GetStopWords(), frw.GetSuffixes());
             analysingText.Name = file.FileName;
             analysingText.AddText(file.FileContent);
             _analysingText = analysingText;

@@ -17,6 +17,7 @@ namespace AutomaticTextClassification
         {
             string menuOption;
             bool menu = true;
+            bool failed = false;
             
             //Ensures the users keeps returning to the menu until they wish to quit.
             do
@@ -38,9 +39,12 @@ namespace AutomaticTextClassification
                         }
                         catch (Exception)
                         {
-                            Console.WriteLine("File error, unable to read training data");
+                            failed = true;
                         }
-                        SaveBayesingNetwork();
+                        if (failed)
+                            Console.WriteLine("File error, unable to read training data");                        
+                        else
+                            SaveBayesingNetwork();
                         menu = true;
                         break;
                     case "2":

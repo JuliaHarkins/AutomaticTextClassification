@@ -73,7 +73,7 @@ namespace AutomaticTextClassification
         /// takes the lemmatizing words from the debug folder
         /// </summary>
         /// <returns>returns the array of lemmatizingWords</returns>
-        public string[] GetLemmatizingWords()
+        public string[] GetStopWords()
         {
             List<string> lemmatizingWords = new List<string>();
             using (StreamReader sr = new StreamReader("stopWords.txt"))
@@ -116,7 +116,7 @@ namespace AutomaticTextClassification
             bool fileFailed = true;
             string folderPath = _BayesingNetworkFolder + "\\" + folderName;
             //find out if the folder already exists
-            if (!Directory.Exists(folderPath))
+            if (!Directory.Exists(folderPath) && bayesingNetwork!=null)
             {
                 Directory.CreateDirectory(folderPath);
                 //create a file for each category known to the network
@@ -157,7 +157,7 @@ namespace AutomaticTextClassification
                     //file is the networks categories
                     foreach (string file in Directory.EnumerateFiles(d, "*.txt"))
                     {
-                        CategoryObj c = new CategoryObj(GetLemmatizingWords(), GetSuffixes())
+                        CategoryObj c = new CategoryObj(GetStopWords(), GetSuffixes())
                         {
                             Name = Path.GetFileName(file)
                         };
