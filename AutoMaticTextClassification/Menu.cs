@@ -16,7 +16,7 @@ namespace AutomaticTextClassification
         public void StartUp()
         {
             string menuOption;
-            bool menu = false;
+            bool menu = true;
             
             //Ensures the users keeps returning to the menu until they wish to quit.
             do
@@ -49,28 +49,30 @@ namespace AutomaticTextClassification
                         if (!menu)
                         {
                             SelectText();
-                        }
-                        if (_bn != null)
-                        {
-                            //gets the result of the analysed text
-                            string[] result = _bn.GetAnalysedResult().ToArray();
-                            Console.Clear();
-                            if (result.Count() != 0)
+                            if (_bn != null)
                             {
-                                //displays the result to the user
-                                Console.WriteLine("The results of the analysed text are");
-                                int i = 1;
-                                foreach (string s in result)
+                                //gets the result of the analysed text
+                                string[] result = _bn.GetAnalysedResult().ToArray();
+                                Console.Clear();
+                                if (result.Count() != 0)
                                 {
-                                    Console.WriteLine(i + ". " + s);
-                                    i++;
+                                    //displays the result to the user
+                                    Console.WriteLine("The results of the analysed text are");
+                                    int i = 1;
+                                    foreach (string s in result)
+                                    {
+                                        Console.WriteLine(i + ". " + s);
+                                        i++;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("No results avalible.");
+
                                 }
                             }
-                            else
-                            {
-                                Console.WriteLine("No results avalible.");
-                            }
                         }
+                        menu = true;
                         break;
                     case "q":
                         //allows the user to escape the program
@@ -80,6 +82,8 @@ namespace AutomaticTextClassification
                         break;
 
                     default:
+                        Console.Clear();
+                        Console.WriteLine("Invalid option. Please enter 1, 2 or q.");
                         menu = true;
                         break;
                 }
