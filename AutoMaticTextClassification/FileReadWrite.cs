@@ -42,7 +42,7 @@ namespace AutomaticTextClassification
             foreach (string file in Directory.EnumerateFiles(_TrainingDataFolder, "*.txt"))
             {
                 FileObj f = new FileObj();
-                f.FileName = Path.GetFileName(file);
+                f.FileName = Path.GetFileName(file).ToLower();
                 string content = File.ReadAllText(file);
                 f.FileContent = RemovePunctuation(content);
                 trainingData.Add(f);
@@ -60,7 +60,7 @@ namespace AutomaticTextClassification
             foreach (string file in Directory.EnumerateFiles(_TestDataFolder, "*.txt"))
             {
                 FileObj f = new FileObj();
-                f.FileName = Path.GetFileName(file);
+                f.FileName = Path.GetFileName(file).ToLower();
                 string content = File.ReadAllText(file);
                 f.FileContent = RemovePunctuation(content);
                 testData.Add(f);
@@ -76,7 +76,7 @@ namespace AutomaticTextClassification
         public string[] GetLemmatizingWords()
         {
             List<string> lemmatizingWords = new List<string>();
-            using (StreamReader sr = new StreamReader("lemmatizingWords.txt"))
+            using (StreamReader sr = new StreamReader("stopWords.txt"))
             {
                 string line = "";
                 while ((line = sr.ReadLine()) != null)

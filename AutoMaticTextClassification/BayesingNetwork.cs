@@ -105,7 +105,6 @@ namespace AutomaticTextClassification
                 double chance=0; //running total of category number
                 foreach (KeyValuePair<string, int> kvp in cat.WordInformation)
                 {
-
                     if (_analysingText.WordInformation.ContainsKey(kvp.Key))
                     {
                         //sets the first value

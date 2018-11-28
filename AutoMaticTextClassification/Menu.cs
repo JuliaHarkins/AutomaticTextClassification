@@ -41,6 +41,7 @@ namespace AutomaticTextClassification
                             Console.WriteLine("File error, unable to read training data");
                         }
                         SaveBayesingNetwork();
+                        menu = true;
                         break;
                     case "2":
                         //gets an already existing network
@@ -48,29 +49,30 @@ namespace AutomaticTextClassification
                         if (!menu)
                         {
                             SelectText();
-                        }
-                        if (_bn != null)
-                        {
-                            //gets the result of the analysed text
-                            string[] result = _bn.GetAnalysedResult().ToArray();
-                            Console.Clear();
-                            if (result.Count() != 0)
+                            if (_bn != null)
                             {
+                                //gets the result of the analysed text
+                                string[] result = _bn.GetAnalysedResult().ToArray();
                                 Console.Clear();
-                                //displays the result to the user
-                                Console.WriteLine("The results of the analysed text are");
-                                int i = 1;
-                                foreach (string s in result)
+                                if (result.Count() != 0)
                                 {
-                                    Console.WriteLine(i + ". " + s);
-                                    i++;
+                                    //displays the result to the user
+                                    Console.WriteLine("The results of the analysed text are");
+                                    int i = 1;
+                                    foreach (string s in result)
+                                    {
+                                        Console.WriteLine(i + ". " + s);
+                                        i++;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine("No results avalible.");
+
                                 }
                             }
-                            else
-                            {
-                                Console.WriteLine("No results avalible.");
-                            }
                         }
+                        menu = true;
                         break;
                     case "q":
                         //allows the user to escape the program
@@ -78,8 +80,11 @@ namespace AutomaticTextClassification
                         Console.WriteLine("Exiting Program");
                         menu = false;
                         break;
+
                     default:
-                        Console.WriteLine("Invalid Option");
+                        Console.Clear();
+                        Console.WriteLine("Invalid option. Please enter 1, 2 or q.");
+                        menu = true;
                         break;
                 }
                 Console.ReadKey();
